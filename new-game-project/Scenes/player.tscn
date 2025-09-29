@@ -161,23 +161,24 @@ animations = [{
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_cvnsp")
-move_speed = 180.0
-max_speed = 250.0
+move_speed = 250.0
+max_speed = 275.0
 max_fall_speed = 1000.0
-acceleration = 10.0
-deceleration = 10.0
-air_acceleration_mult = 0.4
-air_deceleration_mult = 0.2
+acceleration = 30.0
+deceleration = 20.0
+air_acceleration_mult = 0.2
+air_deceleration_mult = 0.3
 coyote_time = 0.2
 jump_buffer_time = 0.1
 jump_cooldown = 0.5
-jump_force = 550.0
-jump_hang_time_threshold = 100.0
+jump_force = 600.0
+jump_hang_time_threshold = 50.0
 jump_apex_acceleration_mult = 5.0
 jump_apex_speed_mult = 1.2
 jump_release_gravity_mult = 1.75
 jump_fall_gravity_mult = 1.25
 jump_apex_gravity_mult = 0.75
+initial_gravity = 1200.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -38)

@@ -19,6 +19,7 @@ extends CharacterBody2D
 @export var jump_release_gravity_mult : float
 @export var jump_fall_gravity_mult : float
 @export var jump_apex_gravity_mult : float
+@export var initial_gravity : float
 
 var time_left_ground : float
 var time_jump_pressed : float
@@ -85,7 +86,8 @@ func apply_movement(delta : float) -> void:
 	velocity.x += movement * delta
 	
 func apply_gravity(delta : float) -> void:
-	var gravity = get_gravity()
+	
+	var gravity = initial_gravity
 	
 	if not grounded:
 		if jumping:
@@ -95,7 +97,7 @@ func apply_gravity(delta : float) -> void:
 				gravity *= jump_release_gravity_mult
 			elif velocity.y > 0:
 				gravity *= jump_fall_gravity_mult
-		velocity += gravity * delta
+		velocity.y += gravity * delta
 		velocity.y= min(velocity.y, max_fall_speed)
 		
 func apply_jump_force(delta : float) -> void:
