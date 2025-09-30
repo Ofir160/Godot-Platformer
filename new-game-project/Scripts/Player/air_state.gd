@@ -5,10 +5,11 @@ class_name AirState
 @export var idle_state : PlayerState
 @export var jump_state : PlayerState
 
+var accel_rate : float
 var move_input : float
 
-func enter(previous_state : State) -> void:
-	super(previous_state)
+func enter() -> void:
+	super()
 	
 func process_input() -> State:
 	move_input = Input.get_axis("move_left", "move_right")
@@ -17,13 +18,53 @@ func process_input() -> State:
 		parent.animated_sprite.flip_h = false
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
+		
+	if Input.is_action_just_pressed("jump"):
+		PlayerState.time_jump_pressed = parent.current_time
 	
 	return null
 
 func physics_update(delta : float) -> State:
-	# Checks if the player becomes in the air
-	if not parent.body.is_on_floor():
-		return air_state
+	if parent.body.is_on_floor():
+		if abs(move_input) > 0.01:
+			return move_state
+		else:
+			return idle_state
 	
-	parent.move_and_slide()
+	var target_speed : float = move_input * stats.move_speed
+	
+	if not is_speeding(move_input):
+		if abs(target_speed) > 0.01:
+			accel_rate = stats.acceleration * stats.air_acceleration_mult
+		else:
+			accel_rate = stats.deceleration * stats.air_deceleration_mult
+		if is_at_apex():
+			accel_rate *= stats.jump_apex_acceleration_mult
+			target_speed *= stats.jump_apex_speed_mult
+	else:
+		accel_rate = 0
+	
+	
+	parent.body.velocity.x += (target_speed - parent.body.velocity.x) * accel_rate * delta
+	
+	var gravity : float = stats.initial_gravity
+	
+	if previous_state == jump_state:
+		if is_at_apex():
+			gravity *= stats.jump_apex_gravity_mult
+		if not Input.is_action_pressed("jump"):
+			gravity *= stats.jump_release_gravity_mult
+		elif parent.body.velocity.y > 0:
+			gravity *= stats.jump_fall_gravity_mult
+			
+	parent.body.velocity.y += gravity * delta
+	parent.body.velocity.y = min(parent.body.velocity.y, stats.max_fall_speed)
+	
+	parent.body.move_and_slide()
 	return null
+	
+func is_at_apex() -> bool:
+	return previous_state == jump_state and abs(parent.body.velocity.y) < stats.jump_hang_time_threshold
+	
+func is_speeding(input : float) -> bool:
+	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and input > 0.01

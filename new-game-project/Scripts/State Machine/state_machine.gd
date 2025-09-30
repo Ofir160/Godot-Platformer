@@ -11,7 +11,7 @@ func init(parent : Parent) -> void:
 			child.parent = parent # Sets the states parent to the parent
 			
 	if initial_state:
-		initial_state.enter(null) # Enters the initial state
+		initial_state.enter() # Enters the initial state
 		current_state = initial_state
 
 func handle_input() -> void:
@@ -33,5 +33,6 @@ func change_state(new_state : State) -> void:
 	if current_state:
 		current_state.exit() # Exits old state
 	
-	new_state.enter(current_state) # Enters new state
+	new_state.previous_state = current_state
+	new_state.enter() # Enters new state
 	current_state = new_state

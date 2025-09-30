@@ -5,20 +5,23 @@ class_name IdleState
 @export var move_state : PlayerState
 @export var air_state : PlayerState
 
-func enter(previous_state : State) -> void:
-	super(previous_state)
+var move_input : float
+
+func enter() -> void:
+	super()
 	parent.body.velocity.x = 0.0
 	
 func process_input() -> State:
-	# Check if any jumps were queued or if the jump button is pressed
-	if is_jump_buffered() and is_grounded():
-		return jump_state
-		
-	# Checks for player movement
-	if Input.get_axis("move_left", "move_right") != 0:
+	move_input = Input.get_axis("move_left", "move_right")
+	
+	# Check if moving
+	if move_input != 0:
 		return move_state
 	
-	
+	# Check if a jump is buffered
+	if is_jump_buffered() and parent.body.is_on_floor():
+		return jump_state
+		
 	return null
 
 func physics_update(delta : float) -> State:
@@ -26,5 +29,7 @@ func physics_update(delta : float) -> State:
 	if not parent.body.is_on_floor():
 		return air_state
 	
-	parent.move_and_slide()
 	return null
+	
+func is_jump_buffered() -> bool:
+	return (Input.is_action_just_pressed("jump") or (parent.current_time - time_jump_pressed < stats.jump_buffer_time and time_jump_pressed > 0)) and parent.current_time - time_jumped > stats.jump_cooldown
