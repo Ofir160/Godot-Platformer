@@ -1,8 +1,8 @@
 extends PlayerState
-class_name IdleState
+class_name SlideState
 
-@export var jump_state : PlayerState
 @export var move_state : PlayerState
+@export var idle_state : PlayerState
 @export var air_state : PlayerState
 
 var move_input : float
@@ -14,21 +14,31 @@ func enter() -> void:
 func process_input() -> State:
 	move_input = Input.get_axis("move_left", "move_right")
 	
-	# Check if moving
-	if move_input != 0:
-		return move_state
-	
 	# Check if a jump is buffered
-	if is_jump_buffered() and parent.body.is_on_floor():
-		return jump_state
+	#if is_jump_buffered() and parent.body.is_on_floor():
+		#return jump_state
 		
 	return null
 
 func physics_update(delta : float) -> State:
-	# Checks if the player becomes in the airA
-	if not parent.body.is_on_floor():
+	# Checks if the player slides to the ground
+	if parent.body.is_on_floor():
+		if abs(move_input) > 0.01:
+			return move_state
+		else:
+			return air_state
+	elif not parent.body.is_on_wall():
 		return air_state
 	
+	var dir : float = -sign(parent.body.get_wall_normal().x)
+	
+	if abs(move_input) > 0.01:
+		if dir != sign(move_input):
+			return air_state
+	else:
+		return air_state
+	
+	parent.body.move_and_slide()
 	return null
 	
 func is_jump_buffered() -> bool:

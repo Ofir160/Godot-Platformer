@@ -4,6 +4,7 @@ class_name MoveState
 @export var idle_state : PlayerState
 @export var jump_state : PlayerState
 @export var coyote_state : PlayerState
+@export var slide_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -29,7 +30,14 @@ func process_input() -> State:
 func physics_update(delta : float) -> State:
 	# If you walked off a platform
 	if not parent.body.is_on_floor():
-		return coyote_state
+		if parent.body.is_on_wall():
+			var dir : float = -sign(parent.body.get_wall_normal().x)
+			
+			if abs(move_input) > 0:
+				if sign(move_input) == dir:
+					return slide_state
+		else:
+			return coyote_state
 	
 	var target_speed : float = move_input * stats.move_speed
 	

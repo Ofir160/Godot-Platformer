@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=34 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
@@ -9,9 +9,10 @@
 [ext_resource type="Script" uid="uid://cvxo4fgevxljb" path="res://Scripts/Player/jump_state.gd" id="6_x3wgy"]
 [ext_resource type="Script" uid="uid://dtoqqgpk4og06" path="res://Scripts/Player/air_state.gd" id="7_3smsa"]
 [ext_resource type="Script" uid="uid://bx3tb7gsdrbw6" path="res://Scripts/Player/coyote_state.gd" id="8_8erm5"]
+[ext_resource type="Script" uid="uid://b0r4i1yxcoged" path="res://Scripts/Player/slide_state.gd" id="10_tx1dd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
-size = Vector2(52, 76)
+size = Vector2(48, 72)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6t5aa"]
 atlas = ExtResource("2_cvnsp")
@@ -28,6 +29,10 @@ region = Rect2(64, 0, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_x3wgy"]
 atlas = ExtResource("2_cvnsp")
 region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bi64h"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(64, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3smsa"]
 atlas = ExtResource("2_cvnsp")
@@ -114,6 +119,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_bi64h")
+}],
+"loop": true,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_3smsa")
 }, {
 "duration": 1.0,
@@ -171,14 +184,14 @@ script = ExtResource("1_cvnsp")
 body = NodePath(".")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2, -38)
+position = Vector2(0, -36)
 shape = SubResource("RectangleShape2D_cvnsp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -48)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_bi64h")
-animation = &"Move"
+animation = &"Jump"
 
 [node name="State Machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_6t5aa")
@@ -192,11 +205,12 @@ air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Idle"
 
-[node name="Move State" type="Node" parent="State Machine" node_paths=PackedStringArray("idle_state", "jump_state", "coyote_state")]
+[node name="Move State" type="Node" parent="State Machine" node_paths=PackedStringArray("idle_state", "jump_state", "coyote_state", "slide_state")]
 script = ExtResource("5_fkybt")
 idle_state = NodePath("../Idle State")
 jump_state = NodePath("../Jump State")
 coyote_state = NodePath("../Coyote State")
+slide_state = NodePath("../Slide State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
@@ -204,12 +218,14 @@ animation_name = "Move"
 script = ExtResource("6_x3wgy")
 air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
+animation_name = "Jump"
 
-[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state")]
+[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state")]
 script = ExtResource("7_3smsa")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
 jump_state = NodePath("../Jump State")
+slide_state = NodePath("../Slide State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
@@ -219,3 +235,11 @@ air_state = NodePath("../Air State")
 jump_state = NodePath("../Jump State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
+
+[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state")]
+script = ExtResource("10_tx1dd")
+move_state = NodePath("../Move State")
+idle_state = NodePath("../Idle State")
+air_state = NodePath("../Air State")
+stats = ExtResource("5_f1ek2")
+animation_name = "Jump"
