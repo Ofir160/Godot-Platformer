@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=38 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
@@ -10,9 +10,13 @@
 [ext_resource type="Script" uid="uid://dtoqqgpk4og06" path="res://Scripts/Player/air_state.gd" id="7_3smsa"]
 [ext_resource type="Script" uid="uid://bx3tb7gsdrbw6" path="res://Scripts/Player/coyote_state.gd" id="8_8erm5"]
 [ext_resource type="Script" uid="uid://b0r4i1yxcoged" path="res://Scripts/Player/slide_state.gd" id="10_tx1dd"]
+[ext_resource type="Script" uid="uid://b17us7cm0j12m" path="res://Scripts/Player/wall_jump_state.gd" id="11_gymyn"]
+[ext_resource type="Script" uid="uid://b1buysd8ia2ph" path="res://Scripts/Player/wall_jump_damping_state.gd" id="12_pu2lt"]
+[ext_resource type="Script" uid="uid://orot5t7221k3" path="res://Scripts/Player/dash_state.gd" id="13_ukyrk"]
+[ext_resource type="Script" uid="uid://c1hl1ixb3fdxl" path="res://Scripts/Player/dash_interruptable_state.gd" id="14_7dp3o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
-size = Vector2(48, 72)
+size = Vector2(40, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6t5aa"]
 atlas = ExtResource("2_cvnsp")
@@ -180,37 +184,42 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body")]
+collision_layer = 2
+safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
+print_state_changes = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -36)
+position = Vector2(0, -32)
 shape = SubResource("RectangleShape2D_cvnsp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -48)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_bi64h")
-animation = &"Jump"
+animation = &"Idle"
+frame_progress = 0.229842
 
 [node name="State Machine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_6t5aa")
-initial_state = NodePath("Idle State")
+initial_state = NodePath("Air State")
 
-[node name="Idle State" type="Node" parent="State Machine" node_paths=PackedStringArray("jump_state", "move_state", "air_state")]
+[node name="Idle State" type="Node" parent="State Machine" node_paths=PackedStringArray("jump_state", "move_state", "air_state", "dash_state")]
 script = ExtResource("4_vgqql")
 jump_state = NodePath("../Jump State")
 move_state = NodePath("../Move State")
 air_state = NodePath("../Air State")
+dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Idle"
 
-[node name="Move State" type="Node" parent="State Machine" node_paths=PackedStringArray("idle_state", "jump_state", "coyote_state", "slide_state")]
+[node name="Move State" type="Node" parent="State Machine" node_paths=PackedStringArray("idle_state", "jump_state", "coyote_state", "dash_state")]
 script = ExtResource("5_fkybt")
 idle_state = NodePath("../Idle State")
 jump_state = NodePath("../Jump State")
 coyote_state = NodePath("../Coyote State")
-slide_state = NodePath("../Slide State")
+dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
@@ -220,12 +229,13 @@ air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
-[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state")]
+[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_state")]
 script = ExtResource("7_3smsa")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
 jump_state = NodePath("../Jump State")
 slide_state = NodePath("../Slide State")
+dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
@@ -236,10 +246,35 @@ jump_state = NodePath("../Jump State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
-[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state")]
+[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state", "wall_jump_state")]
 script = ExtResource("10_tx1dd")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
 air_state = NodePath("../Air State")
+wall_jump_state = NodePath("../Wall Jump State")
+stats = ExtResource("5_f1ek2")
+animation_name = "Jump"
+
+[node name="Wall Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("wall_jump_damping_state")]
+script = ExtResource("11_gymyn")
+wall_jump_damping_state = NodePath("../Wall Jump Damping State")
+stats = ExtResource("5_f1ek2")
+
+[node name="Wall Jump Damping State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
+script = ExtResource("12_pu2lt")
+air_state = NodePath("../Air State")
+stats = ExtResource("5_f1ek2")
+
+[node name="Dash State" type="Node" parent="State Machine" node_paths=PackedStringArray("dash_interruptable_state")]
+script = ExtResource("13_ukyrk")
+dash_interruptable_state = NodePath("../Dash Interruptable State")
+stats = ExtResource("5_f1ek2")
+animation_name = "Jump"
+
+[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "slide_state")]
+script = ExtResource("14_7dp3o")
+air_state = NodePath("../Air State")
+move_state = NodePath("../Move State")
+slide_state = NodePath("../Slide State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"

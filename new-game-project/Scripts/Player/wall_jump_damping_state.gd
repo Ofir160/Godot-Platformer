@@ -1,38 +1,35 @@
 extends PlayerState
-class_name CoyoteState
+class_name WallJumpDampingState
 
 @export var air_state : PlayerState
-@export var jump_state : PlayerState
 
-var time_left_ground : float
 var accel_rate : float
 var move_input : float
+var time_entered : float
+var dir : float
+var move_back : bool
 
 func enter() -> void:
 	super()
-	time_left_ground = parent.current_time
+	time_entered = parent.current_time
+	dir = -sign(parent.body.get_wall_normal().x)
 	
 func process_input() -> State:
 	move_input = Input.get_axis("move_left", "move_right")
 	
-	# Flips character depending on movement direction
 	if move_input > 0:
 		parent.animated_sprite.flip_h = false
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
 	
-	# If the player jumps in coyote time the jump will go through
-	if Input.is_action_just_pressed("jump"):
-		return jump_state
-		
-	# If coyote time is finished move to air state
-	if parent.current_time - time_left_ground > stats.coyote_time:
-		return air_state
-	
 	return null
 
 func physics_update(delta : float) -> State:
+	if parent.current_time - time_entered > stats.wall_jump_damping_time:
+		return air_state
+	
 	var target_speed : float = move_input * stats.move_speed
+	target_speed = lerp(target_speed, parent.body.velocity.x, 1 - stats.wall_jump_damping_strength)
 	
 	if not is_speeding(move_input):
 		if abs(target_speed) > 0.01:
@@ -41,14 +38,22 @@ func physics_update(delta : float) -> State:
 			accel_rate = stats.deceleration * stats.air_deceleration_mult
 	else:
 		accel_rate = stats.speeding_deceleration
+		
+	if abs(move_input) > 0.01 and sign(move_input) == dir:
+		accel_rate *= stats.wall_jump_move_back_mult
 	
 	parent.body.velocity.x += (target_speed - parent.body.velocity.x) * accel_rate * delta
 	
-	parent.body.velocity.y += stats.initial_gravity * delta
+	var gravity : float = stats.initial_gravity
+	
+	if not Input.is_action_pressed("jump"):
+		gravity *= stats.wall_jump_release_gravity_mult
+	
+	parent.body.velocity.y += gravity * delta
 	parent.body.velocity.y = min(parent.body.velocity.y, stats.max_fall_speed)
 	
 	parent.body.move_and_slide()
 	return null
-
+	
 func is_speeding(input : float) -> bool:
-	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
+	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and input > 0.01

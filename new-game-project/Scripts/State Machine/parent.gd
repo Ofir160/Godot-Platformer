@@ -3,6 +3,7 @@ class_name Parent
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var state_machine: StateMachine = $"State Machine"
+@export var print_state_changes : bool
 
 var current_time : float
 

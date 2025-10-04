@@ -7,7 +7,8 @@ var previous_state : State
 
 func enter() -> void:
 	parent.animated_sprite.play(animation_name)
-	print("State change! Went from " + (str(previous_state.name) if previous_state else "nothing") + " to " + str(name))
+	if parent.print_state_changes:
+		print("State change! Went from " + (str(previous_state.name) if previous_state else "nothing") + " to " + str(name))
 
 func exit() -> void:
 	pass

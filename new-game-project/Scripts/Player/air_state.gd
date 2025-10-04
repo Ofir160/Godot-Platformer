@@ -5,6 +5,7 @@ class_name AirState
 @export var idle_state : PlayerState
 @export var jump_state : PlayerState
 @export var slide_state : PlayerState
+@export var dash_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -21,7 +22,10 @@ func process_input() -> State:
 		parent.animated_sprite.flip_h = true
 		
 	if Input.is_action_just_pressed("jump"):
-		PlayerState.time_jump_pressed = parent.current_time
+		PlayerState.time_jump_pressed_in_air = parent.current_time
+		
+	if Input.is_action_just_pressed("dash") and PlayerState.dashes_available > 0:
+		return dash_state
 	
 	return null
 
@@ -31,14 +35,11 @@ func physics_update(delta : float) -> State:
 			return move_state
 		else:
 			return idle_state
-	elif parent.body.is_on_wall():
+	elif parent.body.is_on_wall() and parent.body.velocity.y > -stats.wall_jump_up_velocity_threshold:
 		var dir : float = -sign(parent.body.get_wall_normal().x)
 		
-		if abs(move_input) > 0:
-			if sign(move_input) == dir:
-				return slide_state
-	
-	
+		if (abs(move_input) > 0.01 and sign(move_input) == dir) or abs(move_input) < 0.01:
+			return slide_state
 	
 	var target_speed : float = move_input * stats.move_speed
 	
@@ -51,8 +52,7 @@ func physics_update(delta : float) -> State:
 			accel_rate *= stats.jump_apex_acceleration_mult
 			target_speed *= stats.jump_apex_speed_mult
 	else:
-		accel_rate = 0
-	
+		accel_rate = stats.speeding_deceleration
 	
 	parent.body.velocity.x += (target_speed - parent.body.velocity.x) * accel_rate * delta
 	
@@ -76,4 +76,4 @@ func is_at_apex() -> bool:
 	return previous_state == jump_state and abs(parent.body.velocity.y) < stats.jump_hang_time_threshold
 	
 func is_speeding(input : float) -> bool:
-	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and input > 0.01
+	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
