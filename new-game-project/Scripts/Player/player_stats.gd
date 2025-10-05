@@ -32,6 +32,7 @@ extends Resource
 @export var wall_jump_damping_time : float = 0.25
 @export var wall_jump_damping_strength : float = 0.4
 @export var dashes : int = 1
+@export var dash_cooldown : float = 0.2
 @export var dash_length : float = 500
 @export var dash_time : float = 1
 @export var dash_uninterruptable_percent : float = 0.2

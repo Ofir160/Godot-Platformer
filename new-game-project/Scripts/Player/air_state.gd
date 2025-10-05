@@ -24,7 +24,7 @@ func process_input() -> State:
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.time_jump_pressed_in_air = parent.current_time
 		
-	if Input.is_action_just_pressed("dash") and PlayerState.dashes_available > 0:
+	if Input.is_action_just_pressed("dash") and dash_available():
 		return dash_state
 	
 	return null
@@ -77,3 +77,6 @@ func is_at_apex() -> bool:
 	
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
+
+func dash_available() -> bool:
+	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01

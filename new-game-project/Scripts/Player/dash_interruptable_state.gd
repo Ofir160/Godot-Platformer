@@ -16,6 +16,7 @@ func enter() -> void:
 	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
 	
 func physics_update(delta : float) -> State:
+	# Checks if your dash hit an obstacle and stopped moving
 	if parent.body.is_on_floor():
 		if abs(parent.body.velocity.x) < 0.01:
 			return idle_state
@@ -25,8 +26,10 @@ func physics_update(delta : float) -> State:
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
 			return air_state
-				
+	
+	# Check if the dash has ended
 	if parent.current_time - time_started_slowing_down > dash_time:
+		time_dashed = parent.current_time
 		if parent.body.is_on_floor():
 			return move_state
 		else:

@@ -3,6 +3,7 @@ class_name CoyoteState
 
 @export var air_state : PlayerState
 @export var jump_state : PlayerState
+@export var dash_state : PlayerState
 
 var time_left_ground : float
 var accel_rate : float
@@ -24,6 +25,10 @@ func process_input() -> State:
 	# If the player jumps in coyote time the jump will go through
 	if Input.is_action_just_pressed("jump"):
 		return jump_state
+		
+	# Checks if dashed
+	if Input.is_action_just_pressed("dash") and dash_available():
+		return dash_state
 		
 	# If coyote time is finished move to air state
 	if parent.current_time - time_left_ground > stats.coyote_time:
@@ -52,3 +57,6 @@ func physics_update(delta : float) -> State:
 
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
+
+func dash_available() -> bool:
+	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01

@@ -4,7 +4,7 @@ class_name DashState
 @export var dash_interruptable_state : PlayerState
 
 var direction : Vector2
-var time_dashed : float
+var time_started_dashing : float
 
 func enter() -> void:
 	super()

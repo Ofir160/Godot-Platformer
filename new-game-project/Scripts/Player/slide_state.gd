@@ -5,6 +5,7 @@ class_name SlideState
 @export var idle_state : PlayerState
 @export var air_state : PlayerState
 @export var wall_jump_state : PlayerState
+@export var dash_state : PlayerState
 
 var move_input : float
 var dir : float
@@ -25,6 +26,17 @@ func process_input() -> State:
 	if is_jump_buffered() and parent.body.is_on_wall():
 		return wall_jump_state
 		
+	# Checks if dashes
+	if Input.is_action_just_pressed("dash") and dash_available():
+		var looking_up : bool = Input.is_action_pressed("look_up")
+		var looking_down : bool = Input.is_action_pressed("look_down")
+		
+		var dashing_into_wall : bool = abs(move_input) > 0.01 and sign(move_input) == dir and not looking_up and not looking_down
+		var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up
+		
+		if not dashing_into_wall and not idle_dashing_into_wall:
+			return dash_state
+		
 	return null
 
 func physics_update(delta : float) -> State:
@@ -33,7 +45,7 @@ func physics_update(delta : float) -> State:
 	
 	# Checks if the player slides to the ground
 	if parent.body.is_on_floor():
-		if abs(move_input) > 0.01:
+		if abs(move_input) > 0.01 and sign(move_input) != dir:
 			return move_state
 		else:
 			return idle_state
@@ -54,3 +66,6 @@ func physics_update(delta : float) -> State:
 	
 func is_jump_buffered() -> bool:
 	return (Input.is_action_just_pressed("jump") or (parent.current_time - time_jump_pressed_in_air < stats.jump_buffer_time and time_jump_pressed_in_air > 0)) and parent.current_time - time_wall_jumped > stats.wall_jump_cooldown
+	
+func dash_available() -> bool:
+	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01

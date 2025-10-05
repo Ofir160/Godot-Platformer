@@ -2,6 +2,7 @@ extends PlayerState
 class_name WallJumpDampingState
 
 @export var air_state : PlayerState
+@export var dash_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -21,6 +22,9 @@ func process_input() -> State:
 		parent.animated_sprite.flip_h = false
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
+		
+	if Input.is_action_just_pressed("dash") and dash_available():
+		return dash_state
 	
 	return null
 
@@ -57,3 +61,6 @@ func physics_update(delta : float) -> State:
 	
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and input > 0.01
+	
+func dash_available() -> bool:
+	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01

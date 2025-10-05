@@ -188,6 +188,7 @@ collision_layer = 2
 safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
+print_state_changes = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -32)
@@ -204,12 +205,13 @@ frame_progress = 0.229842
 script = ExtResource("3_6t5aa")
 initial_state = NodePath("Air State")
 
-[node name="Idle State" type="Node" parent="State Machine" node_paths=PackedStringArray("jump_state", "move_state", "air_state", "dash_state")]
+[node name="Idle State" type="Node" parent="State Machine" node_paths=PackedStringArray("jump_state", "move_state", "air_state", "dash_state", "slide_state")]
 script = ExtResource("4_vgqql")
 jump_state = NodePath("../Jump State")
 move_state = NodePath("../Move State")
 air_state = NodePath("../Air State")
 dash_state = NodePath("../Dash State")
+slide_state = NodePath("../Slide State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Idle"
 
@@ -238,19 +240,21 @@ dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
-[node name="Coyote State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "jump_state")]
+[node name="Coyote State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "jump_state", "dash_state")]
 script = ExtResource("8_8erm5")
 air_state = NodePath("../Air State")
 jump_state = NodePath("../Jump State")
+dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
-[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state", "wall_jump_state")]
+[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state", "wall_jump_state", "dash_state")]
 script = ExtResource("10_tx1dd")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
 air_state = NodePath("../Air State")
 wall_jump_state = NodePath("../Wall Jump State")
+dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
@@ -259,9 +263,10 @@ script = ExtResource("11_gymyn")
 wall_jump_damping_state = NodePath("../Wall Jump Damping State")
 stats = ExtResource("5_f1ek2")
 
-[node name="Wall Jump Damping State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
+[node name="Wall Jump Damping State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "dash_state")]
 script = ExtResource("12_pu2lt")
 air_state = NodePath("../Air State")
+dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 
 [node name="Dash State" type="Node" parent="State Machine" node_paths=PackedStringArray("dash_interruptable_state")]
