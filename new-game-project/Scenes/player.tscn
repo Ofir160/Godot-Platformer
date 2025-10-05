@@ -188,7 +188,6 @@ collision_layer = 2
 safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
-print_state_changes = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -32)
@@ -271,10 +270,11 @@ dash_interruptable_state = NodePath("../Dash Interruptable State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
-[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "slide_state")]
+[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state")]
 script = ExtResource("14_7dp3o")
 air_state = NodePath("../Air State")
 move_state = NodePath("../Move State")
+idle_state = NodePath("../Idle State")
 slide_state = NodePath("../Slide State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"

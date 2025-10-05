@@ -7,6 +7,7 @@ class_name IdleState
 @export var dash_state : PlayerState
 
 var move_input : float
+var on_wall : bool
 
 func enter() -> void:
 	super()
@@ -15,19 +16,12 @@ func enter() -> void:
 	if PlayerState.dashes_available < stats.dashes:
 		PlayerState.dashes_available = stats.dashes
 	
+	on_wall = parent.body.is_on_wall()
+	
 	parent.body.velocity.x = 0.0
 	
 func process_input() -> State:
 	move_input = Input.get_axis("move_left", "move_right")
-	
-	# Check if moving
-	if abs(move_input) > 0.01:
-		if parent.body.is_on_wall():
-			var dir : float = -sign(parent.body.get_wall_normal().x)
-			if sign(move_input) != dir:
-				return move_state
-		else:
-			return move_state
 	
 	# Check if a jump is buffered
 	if is_jump_buffered() and parent.body.is_on_floor():
@@ -42,6 +36,15 @@ func physics_update(delta : float) -> State:
 	# Checks if the player becomes in the air
 	if not parent.body.is_on_floor():
 		return air_state
+	
+	# Check if moving
+	if abs(move_input) > 0.01:
+		if on_wall:
+			var dir : float = -sign(parent.body.get_wall_normal().x)
+			if sign(move_input) != dir:
+				return move_state
+		else:
+			return move_state
 	
 	parent.body.move_and_slide()
 	return null

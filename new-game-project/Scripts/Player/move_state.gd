@@ -53,7 +53,7 @@ func physics_update(delta : float) -> State:
 	# Checks if you have stopped moving
 	if abs(previous_velocity) > 0.01 and abs(parent.body.velocity.x) < 0.01:
 		return idle_state
-		
+	
 	if parent.body.is_on_wall():
 		var dir : float = -sign(parent.body.get_wall_normal().x)
 		if (sign(move_input) == dir and abs(move_input) > 0.01) or abs(move_input) < 0.01:

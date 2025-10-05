@@ -3,6 +3,7 @@ class_name DashInterruptableState
 
 @export var air_state : PlayerState
 @export var move_state : PlayerState
+@export var idle_state : PlayerState
 @export var slide_state : PlayerState
 
 var time_started_slowing_down : float
@@ -15,10 +16,9 @@ func enter() -> void:
 	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
 	
 func physics_update(delta : float) -> State:
-	print(parent.body.velocity)
 	if parent.body.is_on_floor():
 		if abs(parent.body.velocity.x) < 0.01:
-			return move_state
+			return idle_state
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
 			return slide_state
