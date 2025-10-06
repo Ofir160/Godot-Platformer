@@ -16,6 +16,9 @@ func enter() -> void:
 	if PlayerState.dashes_available < stats.dashes:
 		PlayerState.dashes_available = stats.dashes
 	
+	# Refill double jump
+	PlayerState.double_jump_available = true
+	
 func process_input() -> State:
 	move_input = Input.get_axis("move_left", "move_right")
 	
@@ -24,7 +27,7 @@ func process_input() -> State:
 		parent.animated_sprite.flip_h = false
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
-		
+	
 	# Checks if a jump is buffered
 	if is_jump_buffered() and parent.body.is_on_floor():
 		return jump_state
@@ -64,7 +67,7 @@ func physics_update(delta : float) -> State:
 	return null
 
 func is_jump_buffered() -> bool:
-	return (Input.is_action_just_pressed("jump") or (parent.current_time - time_jump_pressed_in_air < stats.jump_buffer_time and time_jump_pressed_in_air > 0)) and parent.current_time - time_jumped > stats.jump_cooldown
+	return (Input.is_action_just_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.jump_buffer_time and PlayerState.time_jump_pressed > 0)) and parent.current_time - PlayerState.time_jumped > stats.jump_cooldown
 	
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01

@@ -17,6 +17,9 @@ func enter() -> void:
 	if PlayerState.dashes_available < stats.dashes:
 		PlayerState.dashes_available = stats.dashes
 	
+	# Refill double jump
+	PlayerState.double_jump_available = true
+	
 	dir = -sign(parent.body.get_wall_normal().x)
 	
 func process_input() -> State:
@@ -65,7 +68,7 @@ func physics_update(delta : float) -> State:
 	return null
 	
 func is_jump_buffered() -> bool:
-	return (Input.is_action_just_pressed("jump") or (parent.current_time - time_jump_pressed_in_air < stats.jump_buffer_time and time_jump_pressed_in_air > 0)) and parent.current_time - time_wall_jumped > stats.wall_jump_cooldown
+	return (Input.is_action_just_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.wall_jump_buffer_time and PlayerState.time_jump_pressed > 0)) and parent.current_time - time_wall_jumped > stats.wall_jump_cooldown
 	
 func dash_available() -> bool:
 	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01

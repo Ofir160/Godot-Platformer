@@ -2,6 +2,7 @@ extends PlayerState
 class_name WallJumpState
 
 @export var wall_jump_damping_state : PlayerState 
+@export var dash_interruptable_state : PlayerState
 
 var move_input : float
 
@@ -22,6 +23,9 @@ func enter() -> void:
 			parent.body.velocity.x = stats.wall_jump_force.x * -dir
 	else:
 		parent.body.velocity.x = stats.wall_jump_force.x * -dir
+	
+	if previous_state == dash_interruptable_state:
+		print("Ahh")
 	
 	PlayerState.time_wall_jumped = parent.current_time
 	

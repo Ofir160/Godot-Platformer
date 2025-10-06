@@ -22,7 +22,11 @@ func process_input() -> State:
 		parent.animated_sprite.flip_h = true
 		
 	if Input.is_action_just_pressed("jump"):
-		PlayerState.time_jump_pressed_in_air = parent.current_time
+		if PlayerState.double_jump_available:
+			PlayerState.double_jump_available = false
+			return jump_state
+		else:
+			PlayerState.time_jump_pressed = parent.current_time
 		
 	if Input.is_action_just_pressed("dash") and dash_available():
 		return dash_state
@@ -61,6 +65,8 @@ func physics_update(delta : float) -> State:
 	if previous_state == jump_state:
 		if is_at_apex():
 			gravity *= stats.jump_apex_gravity_mult
+		if not PlayerState.double_jump_available:
+			gravity *= stats.double_jump_gravity_mult
 		if not Input.is_action_pressed("jump"):
 			gravity *= stats.jump_release_gravity_mult
 		elif parent.body.velocity.y > 0:

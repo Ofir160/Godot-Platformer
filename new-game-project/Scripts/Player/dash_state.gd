@@ -19,6 +19,12 @@ func enter() -> void:
 	parent.body.velocity = direction * stats.dash_length / stats.dash_time
 	time_dashed = parent.current_time
 	
+func process_input() -> State:
+	if Input.is_action_just_pressed("jump"):
+		PlayerState.time_jump_pressed = parent.current_time
+	
+	return null
+	
 func physics_update(delta : float) -> State:
 	if parent.current_time - time_dashed > stats.dash_time * stats.dash_uninterruptable_percent:
 		return dash_interruptable_state

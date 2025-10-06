@@ -188,6 +188,7 @@ collision_layer = 2
 safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
+print_state_changes = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -32)
@@ -223,10 +224,9 @@ dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Move"
 
-[node name="Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "dash_interruptable_state")]
+[node name="Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
 script = ExtResource("6_x3wgy")
 air_state = NodePath("../Air State")
-dash_interruptable_state = NodePath("../Dash Interruptable State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
@@ -258,10 +258,9 @@ dash_state = NodePath("../Dash State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
-[node name="Wall Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("wall_jump_damping_state", "dash_interruptable_state")]
+[node name="Wall Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("wall_jump_damping_state")]
 script = ExtResource("11_gymyn")
 wall_jump_damping_state = NodePath("../Wall Jump Damping State")
-dash_interruptable_state = NodePath("../Dash Interruptable State")
 stats = ExtResource("5_f1ek2")
 
 [node name="Wall Jump Damping State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "dash_state")]
@@ -276,13 +275,11 @@ dash_interruptable_state = NodePath("../Dash Interruptable State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
-[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state")]
+[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state")]
 script = ExtResource("14_7dp3o")
 air_state = NodePath("../Air State")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
 slide_state = NodePath("../Slide State")
-jump_state = NodePath("../Jump State")
-wall_jump_state = NodePath("../Wall Jump State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
