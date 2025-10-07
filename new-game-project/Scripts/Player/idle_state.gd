@@ -18,7 +18,7 @@ func enter() -> void:
 	if PlayerState.dashes_available < stats.dashes:
 		PlayerState.dashes_available = stats.dashes
 	
-	# Checks if on a wall
+	# Checks if on a wall (more reliable than checking every frame)
 	if previous_state == slide_state:
 		on_wall = true
 	else:
@@ -32,18 +32,23 @@ func enter() -> void:
 	parent.body.velocity.x = 0.0
 	
 func process_input() -> State:
+	# Get the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
 	# Check if a jump is buffered
 	if is_jump_buffered() and parent.body.is_on_floor():
 		return jump_state
-		
+	
+	# Checks if the player has dashed
 	if Input.is_action_just_pressed("dash") and dash_available():
 		var looking_up : bool = Input.is_action_pressed("look_up")
 		var looking_down : bool = Input.is_action_pressed("look_down")
 		
+		# Stops the dash if dashing down into the floor
 		var dashing_down : bool = looking_down and abs(move_input) < 0.01
+		# Stops the dash if dashing straight into a wall
 		var dashing_into_wall : bool = abs(move_input) > 0.01 and sign(move_input) == dir and not looking_up and on_wall
+		# Stops the dash if dashing straight into a wall but idle
 		var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up and on_wall
 		if not dashing_down and not dashing_into_wall and not idle_dashing_into_wall:
 			return dash_state

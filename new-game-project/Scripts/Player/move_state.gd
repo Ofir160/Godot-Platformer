@@ -20,6 +20,7 @@ func enter() -> void:
 	PlayerState.double_jump_available = true
 	
 func process_input() -> State:
+	# Gets the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
 	# Flips character depending on movement direction
@@ -31,9 +32,12 @@ func process_input() -> State:
 	# Checks if a jump is buffered
 	if is_jump_buffered() and parent.body.is_on_floor():
 		return jump_state
-		
+	
+	# Checks if the player dashed
 	if Input.is_action_just_pressed("dash") and dash_available():
-		if not (Input.is_action_pressed("look_down") and abs(move_input) < 0.01):
+		# Checks if dashing down into the floor
+		var dashing_down : bool = Input.is_action_pressed("look_down") and abs(move_input) < 0.01
+		if not dashing_down:
 			return dash_state
 	
 	return null
@@ -51,13 +55,17 @@ func physics_update(delta : float) -> State:
 	else:
 		accel_rate = stats.speeding_deceleration
 	
+	# Save the velocity in order to check if stopped moving
 	var previous_velocity : float = parent.body.velocity.x
+	
+	# Accelerates by the difference in target speed. Greater when the difference is bigger
 	parent.body.velocity.x += (target_speed - parent.body.velocity.x) * accel_rate * delta
 	
 	# Checks if you have stopped moving
 	if abs(previous_velocity) > 0.01 and abs(parent.body.velocity.x) < 0.01:
 		return idle_state
 	
+	# If walking into a wall change state to idle state
 	if parent.body.is_on_wall():
 		var dir : float = -sign(parent.body.get_wall_normal().x)
 		if (sign(move_input) == dir and abs(move_input) > 0.01) or abs(move_input) < 0.01:

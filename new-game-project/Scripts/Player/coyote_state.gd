@@ -14,6 +14,7 @@ func enter() -> void:
 	time_left_ground = parent.current_time
 	
 func process_input() -> State:
+	# Gets the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
 	# Flips character depending on movement direction
@@ -39,6 +40,7 @@ func process_input() -> State:
 func physics_update(delta : float) -> State:
 	var target_speed : float = move_input * stats.move_speed
 	
+	# Checks if you are going faster than the max speed
 	if not is_speeding(move_input):
 		if abs(target_speed) > 0.01:
 			accel_rate = stats.acceleration * stats.air_acceleration_mult
@@ -47,9 +49,12 @@ func physics_update(delta : float) -> State:
 	else:
 		accel_rate = stats.speeding_deceleration
 	
+	# Accelerates by the difference in target speed. Greater when the difference is bigger
 	parent.body.velocity.x += (target_speed - parent.body.velocity.x) * accel_rate * delta
 	
+	# Apply gravity
 	parent.body.velocity.y += stats.initial_gravity * delta
+	# Make sure the player isn't falling too fast
 	parent.body.velocity.y = min(parent.body.velocity.y, stats.max_fall_speed)
 	
 	parent.body.move_and_slide()

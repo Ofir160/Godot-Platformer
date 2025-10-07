@@ -14,15 +14,20 @@ var dash_time : float
 func enter() -> void:
 	super()
 	
+	# Sets the time started slowing down to the current time (in order to know when to exit the state)
 	time_started_slowing_down = parent.current_time
+	# Sets the amount of time till the player should exit the state
 	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
 	
 func process_input() -> State:
+	# If super dashed on the floor
 	if is_jump_buffered() and parent.body.is_on_floor():
 		return jump_state
+	# If super dashed on the wall
 	if is_jump_buffered() and parent.body.is_on_wall():
 		return wall_jump_state
 	
+	# If
 	if Input.is_action_pressed("jump"):
 		PlayerState.time_jump_pressed = parent.current_time
 	
@@ -42,15 +47,22 @@ func physics_update(delta : float) -> State:
 	
 	# Check if the dash has ended
 	if parent.current_time - time_started_slowing_down > dash_time:
+		# Sets the time dashed to the current time
 		PlayerState.time_dashed = parent.current_time
+		# If ended dash on the floor go to move state
 		if parent.body.is_on_floor():
 			return move_state
 		else:
-			parent.body.velocity *= stats.dash_upwards_mult
+			if parent.body.velocity.y < 0:
+				# If ended dash moving upwards decrease speed
+				parent.body.velocity *= stats.dash_upwards_mult
+			else:
+				# If ended dash moving downwards increase speed
+				parent.body.velocity *= stats.dash_downwards_mult
 			return air_state
 	
 	parent.body.move_and_slide()
 	return null
 	
 func is_jump_buffered() -> bool:
-	return (Input.is_action_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.jump_buffer_time and PlayerState.time_jump_pressed > 0))
+	return (Input.is_action_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.dash_time and PlayerState.time_jump_pressed > 0))
