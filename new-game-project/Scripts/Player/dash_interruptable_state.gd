@@ -9,6 +9,10 @@ class_name DashInterruptableState
 @export var wall_jump_state : PlayerState
 
 var time_started_slowing_down : float
+var time_floored : float
+var time_walled : float
+var floored : bool
+var walled : bool
 var dash_time : float
 
 func enter() -> void:
@@ -19,6 +23,9 @@ func enter() -> void:
 	# Sets the amount of time till the player should exit the state
 	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
 	
+	floored = false
+	walled = false
+	
 func process_input() -> State:
 	# If super dashed on the floor
 	if is_jump_buffered() and parent.body.is_on_floor():
@@ -27,7 +34,7 @@ func process_input() -> State:
 	if is_jump_buffered() and parent.body.is_on_wall():
 		return wall_jump_state
 	
-	# If
+	# If jumped when not on a wall or floor
 	if Input.is_action_pressed("jump"):
 		PlayerState.time_jump_pressed = parent.current_time
 	
@@ -38,9 +45,15 @@ func physics_update(delta : float) -> State:
 	if parent.body.is_on_floor():
 		if abs(parent.body.velocity.x) < 0.01:
 			return idle_state
+		elif not floored:
+			time_floored = parent.current_time
+			floored = true
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
 			return slide_state
+		elif not walled:
+			time_walled = parent.current_time
+			walled = true
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
 			return air_state
@@ -61,8 +74,11 @@ func physics_update(delta : float) -> State:
 				parent.body.velocity *= stats.dash_downwards_mult
 			return air_state
 	
+	if (floored and parent.current_time - time_floored > stats.dash_grounded_time_percent * dash_time) or (walled and parent.current_time - time_walled > stats.dash_grounded_time_percent * dash_time):
+		PlayerState.dashes_available = stats.dashes
+	
 	parent.body.move_and_slide()
 	return null
 	
 func is_jump_buffered() -> bool:
-	return (Input.is_action_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.dash_time and PlayerState.time_jump_pressed > 0))
+	return (Input.is_action_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.jump_buffer_time and PlayerState.time_jump_pressed > 0))

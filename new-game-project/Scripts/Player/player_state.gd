@@ -9,4 +9,5 @@ static var time_wall_jumped : float
 static var time_dashed : float
 
 static var dashes_available : int
+static var dash_direction : Vector2
 static var double_jump_available : bool

@@ -14,6 +14,7 @@ extends Resource
 @export var coyote_time : float = 0.1
 @export var jump_buffer_time : float = 0.1
 @export var jump_cooldown : float = 0.5
+@export var jump_velocity_damping : float = 0.4
 @export var jump_hang_time_threshold : float = 50
 @export var jump_apex_acceleration_mult : float = 1.2
 @export var jump_apex_speed_mult : float = 1.1
@@ -41,3 +42,9 @@ extends Resource
 @export var dash_uninterruptable_percent : float = 0.1
 @export var dash_upwards_mult : float = 0.55
 @export var dash_downwards_mult : float = 1.1
+@export var dash_grounded_time_percent : float = 0.4
+@export var superdash_down_force : Vector2 = Vector2(650, 300)
+@export var superdash_force : Vector2 = Vector2(450, 600)
+@export var superdash_wall_up_force : Vector2 = Vector2(200, 800)
+@export var superdash_wall_diagonal_force : Vector2 = Vector2(500, 600)
+@export var superdash_wall_straight_force : Vector2 = Vector2(700, 200)

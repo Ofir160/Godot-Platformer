@@ -9,6 +9,8 @@ func enter() -> void:
 	
 	# Makes sure the player is not falling
 	parent.body.velocity.y = min(parent.body.velocity.y, 0)
+	# Dampens horizontal momentum
+	parent.body.velocity.x *= stats.jump_velocity_damping
 	
 	if previous_state == air_state:
 		# When double jumping reduce previous upward momentum
@@ -16,7 +18,24 @@ func enter() -> void:
 		parent.body.velocity.y -= stats.double_jump_force
 	elif previous_state == dash_interruptable_state:
 		# When super dashing increase force
-		pass
+		
+		# Gets the player's movement direction
+		var move_input : float = Input.get_axis("move_left", "move_right")
+		
+		if abs(PlayerState.dash_direction.y) > 0.01:
+			# If doing a down superdash
+			parent.body.velocity.y -= stats.superdash_down_force.y
+			if abs(move_input) > 0.01:
+				parent.body.velocity.x += stats.superdash_down_force.x * sign(move_input)
+			else:
+				parent.body.velocity.x += stats.superdash_down_force.x * (-1 if parent.animated_sprite.flip_h else 1)
+		else:
+			# If doing a straight superdash
+			parent.body.velocity.y -= stats.superdash_force.y
+			if abs(move_input) > 0.01:
+				parent.body.velocity.x += stats.superdash_force.x * sign(move_input)
+			else:
+				parent.body.velocity.x += stats.superdash_force.x * (-1 if parent.animated_sprite.flip_h else 1)
 	else:
 		# Adds the jump force to the player
 		parent.body.velocity.y -= stats.jump_force

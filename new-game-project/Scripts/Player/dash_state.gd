@@ -21,7 +21,11 @@ func enter() -> void:
 	
 	# Calculate the velocity and apply it
 	parent.body.velocity = direction * stats.dash_length / stats.dash_time
+	# Sets the time dashed to the current time
 	time_dashed = parent.current_time
+	
+	# Sets the dash direction to the desired direction
+	PlayerState.dash_direction = direction
 	
 func process_input() -> State:
 	# If jumped mid-dash make sure it gets buffered
