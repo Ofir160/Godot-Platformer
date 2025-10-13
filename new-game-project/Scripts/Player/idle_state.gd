@@ -75,4 +75,4 @@ func is_jump_buffered() -> bool:
 	return (Input.is_action_just_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.jump_buffer_time and PlayerState.time_jump_pressed > 0)) and parent.current_time - time_jumped > stats.jump_cooldown
 
 func dash_available() -> bool:
-	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01
+	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)

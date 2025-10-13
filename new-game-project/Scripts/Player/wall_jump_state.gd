@@ -14,7 +14,10 @@ func enter() -> void:
 	# Dampens upwards momentum
 	parent.body.velocity.y = min(parent.body.velocity.y * stats.wall_jump_velocity_damping, 0)
 	
-	if previous_state == dash_interruptable_state:
+	if superdash_buffer_available():
+		print("Hi")
+	
+	if previous_state == dash_interruptable_state or superdash_buffer_available():
 		# When super dashing increase force
 		
 		# Gets the player's movement direction
@@ -52,3 +55,6 @@ func enter() -> void:
 	
 func physics_update(delta : float) -> State:
 	return wall_jump_damping_state
+	
+func superdash_buffer_available() -> bool:
+	return (parent.current_time - PlayerState.time_dashed < stats.superdash_buffer_time and PlayerState.time_dashed > 0)

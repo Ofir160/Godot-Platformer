@@ -35,6 +35,8 @@ func process_input() -> State:
 	# If the player tried to dash
 	if Input.is_action_just_pressed("dash") and dash_available():
 		return dash_state
+	if Input.is_action_just_pressed("dash") and not dash_available():
+		print(PlayerState.dashes_available)
 	
 	return null
 
@@ -104,4 +106,4 @@ func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
 
 func dash_available() -> bool:
-	return (PlayerState.dashes_available > 0 and parent.current_time - time_dashed > stats.dash_cooldown) or time_dashed < 0.01
+	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)

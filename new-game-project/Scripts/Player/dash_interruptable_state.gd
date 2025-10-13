@@ -14,6 +14,7 @@ var time_walled : float
 var floored : bool
 var walled : bool
 var dash_time : float
+var regain_dash_time : float
 
 func enter() -> void:
 	super()
@@ -22,6 +23,7 @@ func enter() -> void:
 	time_started_slowing_down = parent.current_time
 	# Sets the amount of time till the player should exit the state
 	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
+	regain_dash_time = stats.dash_time * stats.dash_regain_dash_time_percent - stats.dash_time * stats.dash_uninterruptable_percent
 	
 	floored = false
 	walled = false
@@ -38,24 +40,32 @@ func process_input() -> State:
 	if Input.is_action_pressed("jump"):
 		PlayerState.time_jump_pressed = parent.current_time
 	
+	PlayerState.dashes_available = stats.dashes
+	
 	return null
 	
 func physics_update(delta : float) -> State:
 	# Checks if your dash hit an obstacle and stopped moving
 	if parent.body.is_on_floor():
 		if abs(parent.body.velocity.x) < 0.01:
+			# Sets the time dashed to the current time
+			PlayerState.time_dashed = parent.current_time
 			return idle_state
-		elif not floored:
-			time_floored = parent.current_time
-			floored = true
+		#else:
+			#if parent.current_time - time_started_slowing_down > regain_dash_time:
+				#PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
+			# Sets the time dashed to the current time
+			PlayerState.time_dashed = parent.current_time
 			return slide_state
-		elif not walled:
-			time_walled = parent.current_time
-			walled = true
+		#else:
+			#if parent.current_time - time_started_slowing_down > regain_dash_time:
+				#PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
+			# Sets the time dashed to the current time
+			PlayerState.time_dashed = parent.current_time
 			return air_state
 	
 	# Check if the dash has ended
@@ -72,10 +82,10 @@ func physics_update(delta : float) -> State:
 			else:
 				# If ended dash moving downwards increase speed
 				parent.body.velocity *= stats.dash_downwards_mult
-			return air_state
-	
-	if (floored and parent.current_time - time_floored > stats.dash_grounded_time_percent * dash_time) or (walled and parent.current_time - time_walled > stats.dash_grounded_time_percent * dash_time):
-		PlayerState.dashes_available = stats.dashes
+			if parent.body.is_on_wall():
+				return slide_state
+			else:
+				return air_state
 	
 	parent.body.move_and_slide()
 	return null

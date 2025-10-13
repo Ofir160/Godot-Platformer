@@ -19,8 +19,34 @@ func enter() -> void:
 	if abs(direction.x) < 0.01 and abs(direction.y) < 0.01:
 		direction.x = -1 if parent.animated_sprite.flip_h else 1
 	
+	# Dampen previous velocity
+	
+	parent.body.velocity *= stats.dash_damping_mult
+	
 	# Calculate the velocity and apply it
-	parent.body.velocity = direction * stats.dash_length / stats.dash_time
+	
+	var dash_force : Vector2 = direction * stats.dash_length / stats.dash_time
+	
+	# If dashing in a different direction to the direction you are moving on the x axis
+	if abs(parent.body.velocity.x) > 0.01 and abs(direction.x) > 0.01 and sign(parent.body.velocity.x) != sign(direction.x):
+		parent.body.velocity.x = dash_force.x
+	else:
+		parent.body.velocity.x += dash_force.x
+	# If dashing in a different direction to the direction you are moving on the y axis
+	if abs(parent.body.velocity.y) > 0.01 and abs(direction.y) > 0.01 and sign(parent.body.velocity.y) != sign(direction.y):
+		parent.body.velocity.y = dash_force.y
+	else:
+		parent.body.velocity.y += dash_force.y
+	
+	# Constrain velocity
+	
+	# If dashing horizontally set vertical movement to 0
+	if abs(direction.x) > 0.01 and abs(direction.y) < 0.01:
+		parent.body.velocity.y = 0
+	# If dashing vertically set horizontal movement to 0
+	if abs(direction.y) > 0.01 and abs(direction.x) < 0.01:
+		parent.body.velocity.x = 0
+	
 	# Sets the time dashed to the current time
 	time_dashed = parent.current_time
 	
