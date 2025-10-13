@@ -35,8 +35,6 @@ func process_input() -> State:
 	# If the player tried to dash
 	if Input.is_action_just_pressed("dash") and dash_available():
 		return dash_state
-	if Input.is_action_just_pressed("dash") and not dash_available():
-		print(PlayerState.dashes_available)
 	
 	return null
 

@@ -14,7 +14,6 @@ var time_walled : float
 var floored : bool
 var walled : bool
 var dash_time : float
-var regain_dash_time : float
 
 func enter() -> void:
 	super()
@@ -23,7 +22,6 @@ func enter() -> void:
 	time_started_slowing_down = parent.current_time
 	# Sets the amount of time till the player should exit the state
 	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
-	regain_dash_time = stats.dash_time * stats.dash_regain_dash_time_percent - stats.dash_time * stats.dash_uninterruptable_percent
 	
 	floored = false
 	walled = false
@@ -50,18 +48,12 @@ func physics_update(delta : float) -> State:
 		if abs(parent.body.velocity.x) < 0.01:
 			# Sets the time dashed to the current time
 			PlayerState.time_dashed = parent.current_time
-			return idle_state
-		#else:
-			#if parent.current_time - time_started_slowing_down > regain_dash_time:
-				#PlayerState.dashes_available = stats.dashes
+			return move_state
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
 			# Sets the time dashed to the current time
 			PlayerState.time_dashed = parent.current_time
 			return slide_state
-		#else:
-			#if parent.current_time - time_started_slowing_down > regain_dash_time:
-				#PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
 			# Sets the time dashed to the current time
@@ -76,12 +68,15 @@ func physics_update(delta : float) -> State:
 		if parent.body.is_on_floor():
 			return move_state
 		else:
-			if parent.body.velocity.y < 0:
+			if PlayerState.dash_direction.y < 0.01:
 				# If ended dash moving upwards decrease speed
 				parent.body.velocity *= stats.dash_upwards_mult
-			else:
+			elif PlayerState.dash_direction.y > 0.01 and abs(PlayerState.dash_direction.x) > 0.01:
 				# If ended dash moving downwards increase speed
-				parent.body.velocity *= stats.dash_downwards_mult
+				parent.body.velocity.x *= stats.dash_downwards_mult
+			elif abs(PlayerState.dash_direction.y) < 0.01:
+				# If ended dash moving horizontally decrease speed
+				parent.body.velocity.x *= stats.dash_horizontal_mult
 			if parent.body.is_on_wall():
 				return slide_state
 			else:

@@ -14,9 +14,6 @@ func enter() -> void:
 	# Dampens upwards momentum
 	parent.body.velocity.y = min(parent.body.velocity.y * stats.wall_jump_velocity_damping, 0)
 	
-	if superdash_buffer_available():
-		print("Hi")
-	
 	if previous_state == dash_interruptable_state or superdash_buffer_available():
 		# When super dashing increase force
 		

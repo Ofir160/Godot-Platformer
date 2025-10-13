@@ -43,8 +43,9 @@ extends Resource
 @export var dash_damping_mult : float = 0.3
 @export var dash_upwards_mult : float = 0.55
 @export var dash_downwards_mult : float = 1.1
-@export var dash_regain_dash_time_percent : float = 0.5
+@export var dash_horizontal_mult : float = 0.6
 @export var superdash_buffer_time : float = 0.2
+@export var superdash_neck_snap_mult : float = 1.5
 @export var superdash_down_force : Vector2 = Vector2(1000, 450)
 @export var superdash_force : Vector2 = Vector2(800, 600)
 @export var superdash_wall_up_force : Vector2 = Vector2(200, 750)
