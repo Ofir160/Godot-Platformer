@@ -3,7 +3,7 @@ class_name CoyoteState
 
 @export var air_state : PlayerState
 @export var jump_state : PlayerState
-@export var dash_state : PlayerState
+@export var dash_start_state : PlayerState
 
 var time_left_ground : float
 var accel_rate : float
@@ -29,7 +29,7 @@ func process_input() -> State:
 		
 	# Checks if dashed
 	if Input.is_action_just_pressed("dash") and dash_available():
-		return dash_state
+		return dash_start_state
 		
 	# If coyote time is finished move to air state
 	if parent.current_time - time_left_ground > stats.coyote_time:

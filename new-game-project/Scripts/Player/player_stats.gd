@@ -1,6 +1,7 @@
 class_name PlayerStats
 extends Resource
 
+@export_category("Movement Stats")
 @export var move_speed : float = 300.0
 @export var max_speed : float = 325.0
 @export var max_fall_speed : float = 1000
@@ -9,6 +10,7 @@ extends Resource
 @export var speeding_deceleration : float = 3
 @export var air_acceleration_mult : float = 0.3
 @export var air_deceleration_mult : float = 0.3
+@export_category("Jump Stats")
 @export var jump_force : float = 600
 @export var double_jump_force : float = 500
 @export var coyote_time : float = 0.1
@@ -23,6 +25,7 @@ extends Resource
 @export var jump_apex_gravity_mult : float = 0.8
 @export var double_jump_gravity_mult : float = 0.8
 @export var initial_gravity : float = 1300
+@export_category("Wall Stats")
 @export var slide_speed : float = 350
 @export var slide_acceleration : float = 4.0
 @export var wall_jump_cooldown : float = 0.4
@@ -35,15 +38,29 @@ extends Resource
 @export var wall_jump_move_back_mult : float = 1.2
 @export var wall_jump_damping_time : float = 0.25
 @export var wall_jump_damping_strength : float = 0.3
+@export_category("Dash Stats")
 @export var dashes : int = 1
 @export var dash_cooldown : float = 0.25
 @export var dash_length : float = 150
 @export var dash_time : float = 0.2
 @export var dash_uninterruptable_percent : float = 0.1
+@export var dash_frozen_percent : float = 0.2
 @export var dash_damping_mult : float = 0.3
 @export var dash_upwards_mult : float = 0.55
 @export var dash_downwards_mult : float = 1.1
 @export var dash_horizontal_mult : float = 0.6
+
+var frozen_dash_time : float:
+	get:
+		return dash_time * dash_frozen_percent
+var uninterruptable_dash_time : float:
+	get:
+		return dash_time * dash_uninterruptable_percent
+var interruptable_dash_time : float:
+	get:
+		return dash_time * (1 - dash_frozen_percent - dash_uninterruptable_percent)
+
+@export_category("Superdash Stats")
 @export var superdash_buffer_time : float = 0.2
 @export var superdash_neck_snap_mult : float = 1.5
 @export var superdash_down_force : Vector2 = Vector2(1000, 450)

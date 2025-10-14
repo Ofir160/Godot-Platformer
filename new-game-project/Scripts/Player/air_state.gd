@@ -5,7 +5,7 @@ class_name AirState
 @export var idle_state : PlayerState
 @export var jump_state : PlayerState
 @export var slide_state : PlayerState
-@export var dash_state : PlayerState
+@export var dash_start_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -34,7 +34,7 @@ func process_input() -> State:
 	
 	# If the player tried to dash
 	if Input.is_action_just_pressed("dash") and dash_available():
-		return dash_state
+		return dash_start_state
 	
 	return null
 

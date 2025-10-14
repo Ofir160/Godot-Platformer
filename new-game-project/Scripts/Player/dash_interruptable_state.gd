@@ -13,15 +13,12 @@ var time_floored : float
 var time_walled : float
 var floored : bool
 var walled : bool
-var dash_time : float
 
 func enter() -> void:
 	super()
 	
 	# Sets the time started slowing down to the current time (in order to know when to exit the state)
 	time_started_slowing_down = parent.current_time
-	# Sets the amount of time till the player should exit the state
-	dash_time = stats.dash_time * (1 - stats.dash_uninterruptable_percent)
 	
 	floored = false
 	walled = false
@@ -37,8 +34,6 @@ func process_input() -> State:
 	# If jumped when not on a wall or floor
 	if Input.is_action_pressed("jump"):
 		PlayerState.time_jump_pressed = parent.current_time
-	
-	PlayerState.dashes_available = stats.dashes
 	
 	return null
 	
@@ -61,7 +56,7 @@ func physics_update(delta : float) -> State:
 			return air_state
 	
 	# Check if the dash has ended
-	if parent.current_time - time_started_slowing_down > dash_time:
+	if parent.current_time - time_started_slowing_down > stats.interruptable_dash_time:
 		# Sets the time dashed to the current time
 		PlayerState.time_dashed = parent.current_time
 		# If ended dash on the floor go to move state

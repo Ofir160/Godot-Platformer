@@ -2,7 +2,7 @@ extends PlayerState
 class_name WallJumpDampingState
 
 @export var air_state : PlayerState
-@export var dash_state : PlayerState
+@export var dash_start_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -30,7 +30,7 @@ func process_input() -> State:
 		
 	# Checks if the player dashed
 	if Input.is_action_just_pressed("dash") and dash_available():
-		return dash_state
+		return dash_start_state
 	
 	return null
 

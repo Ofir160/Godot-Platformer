@@ -5,7 +5,7 @@ class_name SlideState
 @export var idle_state : PlayerState
 @export var air_state : PlayerState
 @export var wall_jump_state : PlayerState
-@export var dash_state : PlayerState
+@export var dash_start_state : PlayerState
 
 var move_input : float
 var dir : float
@@ -42,7 +42,7 @@ func process_input() -> State:
 		var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up
 		
 		if not dashing_into_wall and not idle_dashing_into_wall:
-			return dash_state
+			return dash_start_state
 		
 	return null
 

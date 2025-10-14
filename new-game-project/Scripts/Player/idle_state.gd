@@ -4,7 +4,7 @@ class_name IdleState
 @export var jump_state : PlayerState
 @export var move_state : PlayerState
 @export var air_state : PlayerState
-@export var dash_state : PlayerState
+@export var dash_start_state : PlayerState
 @export var slide_state : PlayerState
 
 var move_input : float
@@ -51,7 +51,7 @@ func process_input() -> State:
 		# Stops the dash if dashing straight into a wall but idle
 		var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up and on_wall
 		if not dashing_down and not dashing_into_wall and not idle_dashing_into_wall:
-			return dash_state
+			return dash_start_state
 		
 	return null
 
