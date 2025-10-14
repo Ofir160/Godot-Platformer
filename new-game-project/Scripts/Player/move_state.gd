@@ -29,16 +29,18 @@ func process_input() -> State:
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
 	
-	# Checks if a jump is buffered
-	if is_jump_buffered() and parent.body.is_on_floor():
-		return jump_state
-	
 	# Checks if the player dashed
-	if Input.is_action_just_pressed("dash") and dash_available():
+	if is_dash_buffered() and dash_available():
 		# Checks if dashing down into the floor
 		var dashing_down : bool = Input.is_action_pressed("look_down") and abs(move_input) < 0.01
 		if not dashing_down:
 			return dash_start_state
+	elif Input.is_action_just_pressed("dash"):
+		PlayerState.time_dash_pressed = parent.current_time
+	
+	# Checks if a jump is buffered
+	if is_jump_buffered() and parent.body.is_on_floor():
+		return jump_state
 	
 	return null
 
@@ -82,3 +84,6 @@ func is_speeding(input : float) -> bool:
 
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+
+func is_dash_buffered() -> bool:
+	return Input.is_action_just_pressed("dash") or (parent.current_time - PlayerState.time_dash_pressed < stats.dash_buffer_time and PlayerState.time_dash_pressed > 0)

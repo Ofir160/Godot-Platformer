@@ -27,12 +27,8 @@ func process_input() -> State:
 	# Gets the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
-	# Check if a jump is buffered
-	if is_jump_buffered() and parent.body.is_on_wall():
-		return wall_jump_state
-		
 	# Checks if the player dashed
-	if Input.is_action_just_pressed("dash") and dash_available():
+	if is_dash_buffered() and dash_available():
 		var looking_up : bool = Input.is_action_pressed("look_up")
 		var looking_down : bool = Input.is_action_pressed("look_down")
 		
@@ -43,6 +39,12 @@ func process_input() -> State:
 		
 		if not dashing_into_wall and not idle_dashing_into_wall:
 			return dash_start_state
+	elif Input.is_action_just_pressed("dash"):
+		PlayerState.time_dash_pressed = parent.current_time
+	
+	# Check if a jump is buffered
+	if is_jump_buffered() and parent.body.is_on_wall():
+		return wall_jump_state
 		
 	return null
 
@@ -81,3 +83,6 @@ func is_jump_buffered() -> bool:
 	
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+
+func is_dash_buffered() -> bool:
+	return Input.is_action_just_pressed("dash") or (parent.current_time - PlayerState.time_dash_pressed < stats.dash_buffer_time and PlayerState.time_dash_pressed > 0)

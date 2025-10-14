@@ -23,6 +23,12 @@ func process_input() -> State:
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
 		
+	# If the player tried to dash
+	if is_dash_buffered() and dash_available():
+		return dash_start_state
+	elif Input.is_action_just_pressed("dash"):
+		PlayerState.time_dash_pressed = parent.current_time
+		
 	# Checks if the player tried to double jump
 	if Input.is_action_just_pressed("jump"):
 		if PlayerState.double_jump_available:
@@ -31,10 +37,6 @@ func process_input() -> State:
 		else:
 			# Sets the time jump was pressed to the current time (used for jump buffering)
 			PlayerState.time_jump_pressed = parent.current_time
-	
-	# If the player tried to dash
-	if Input.is_action_just_pressed("dash") and dash_available():
-		return dash_start_state
 	
 	return null
 
@@ -105,3 +107,6 @@ func is_speeding(input : float) -> bool:
 
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+
+func is_dash_buffered() -> bool:
+	return Input.is_action_just_pressed("dash") or (parent.current_time - PlayerState.time_dash_pressed < stats.dash_buffer_time and PlayerState.time_dash_pressed > 0)

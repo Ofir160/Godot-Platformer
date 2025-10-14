@@ -28,9 +28,10 @@ func process_input() -> State:
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
 		
-	# Checks if the player dashed
-	if Input.is_action_just_pressed("dash") and dash_available():
-		return dash_start_state
+	if Input.is_action_just_pressed("dash"):
+		PlayerState.time_dash_pressed = parent.current_time
+	if Input.is_action_just_pressed("jump"):
+		PlayerState.time_jump_pressed = parent.current_time
 	
 	return null
 

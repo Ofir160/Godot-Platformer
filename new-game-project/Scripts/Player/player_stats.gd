@@ -42,6 +42,7 @@ extends Resource
 @export_category("Dash Stats")
 @export var dashes : int = 1
 @export var dash_cooldown : float = 0.25
+@export var dash_buffer_time : float = 0.1
 @export var dash_length : float = 150
 @export var dash_time : float = 0.2
 @export var dash_frozen_percent : float = 0.2

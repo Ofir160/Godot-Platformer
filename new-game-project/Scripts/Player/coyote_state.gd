@@ -23,13 +23,15 @@ func process_input() -> State:
 	elif move_input < 0:
 		parent.animated_sprite.flip_h = true
 	
+	# Checks if dashed
+	if is_dash_buffered() and dash_available():
+		return dash_start_state
+	elif Input.is_action_just_pressed("dash"):
+		PlayerState.time_dash_pressed = parent.current_time
+	
 	# If the player jumps in coyote time the jump will go through
 	if Input.is_action_just_pressed("jump"):
 		return jump_state
-		
-	# Checks if dashed
-	if Input.is_action_just_pressed("dash") and dash_available():
-		return dash_start_state
 		
 	# If coyote time is finished move to air state
 	if parent.current_time - time_left_ground > stats.coyote_time:
@@ -65,3 +67,6 @@ func is_speeding(input : float) -> bool:
 
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+
+func is_dash_buffered() -> bool:
+	return Input.is_action_just_pressed("dash") or (parent.current_time - PlayerState.time_dash_pressed < stats.dash_buffer_time and PlayerState.time_dash_pressed > 0)
