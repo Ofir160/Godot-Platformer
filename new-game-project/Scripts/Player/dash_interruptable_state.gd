@@ -8,27 +8,26 @@ class_name DashInterruptableState
 @export var jump_state : PlayerState
 @export var wall_jump_state : PlayerState
 
-var time_started_slowing_down : float
+var time_started : float
 var time_floored : float
 var time_walled : float
-var floored : bool
-var walled : bool
 
 func enter() -> void:
 	super()
 	
-	# Sets the time started slowing down to the current time (in order to know when to exit the state)
-	time_started_slowing_down = parent.current_time
-	
-	floored = false
-	walled = false
+	# Sets the time started 
+	time_started = parent.current_time
 	
 func process_input() -> State:
 	# If super dashed on the floor
 	if is_jump_buffered() and parent.body.is_on_floor():
+		if parent.current_time - time_started > stats.regain_dash_time:
+			PlayerState.dashes_available = stats.dashes
 		return jump_state
 	# If super dashed on the wall
 	if is_jump_buffered() and parent.body.is_on_wall():
+		if parent.current_time - time_started > stats.regain_dash_time:
+			PlayerState.dashes_available = stats.dashes
 		return wall_jump_state
 	
 	# If jumped when not on a wall or floor
@@ -44,11 +43,15 @@ func physics_update(delta : float) -> State:
 			# Sets the time dashed to the current time
 			PlayerState.time_dashed = parent.current_time
 			return move_state
+		elif parent.current_time - time_started > stats.regain_dash_time:
+			PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
 			# Sets the time dashed to the current time
 			PlayerState.time_dashed = parent.current_time
 			return slide_state
+		elif parent.current_time - time_started > stats.regain_dash_time:
+			PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
 			# Sets the time dashed to the current time
@@ -56,7 +59,7 @@ func physics_update(delta : float) -> State:
 			return air_state
 	
 	# Check if the dash has ended
-	if parent.current_time - time_started_slowing_down > stats.interruptable_dash_time:
+	if parent.current_time - time_started > stats.interruptable_dash_time:
 		# Sets the time dashed to the current time
 		PlayerState.time_dashed = parent.current_time
 		# If ended dash on the floor go to move state

@@ -35,8 +35,8 @@ func process_input() -> State:
 	return null
 	
 func physics_update(delta : float) -> State:
-	
 	if parent.current_time - time_started > stats.frozen_dash_time:
 		return dash_state
 	
+	parent.body.move_and_slide()
 	return null

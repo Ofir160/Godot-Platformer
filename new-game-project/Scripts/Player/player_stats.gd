@@ -17,6 +17,7 @@ extends Resource
 @export var jump_buffer_time : float = 0.1
 @export var jump_cooldown : float = 0.5
 @export var jump_velocity_damping : float = 0.2
+@export var double_jump_velocity_boost : float = 1.25
 @export var jump_hang_time_threshold : float = 50
 @export var jump_apex_acceleration_mult : float = 1.2
 @export var jump_apex_speed_mult : float = 1.1
@@ -43,8 +44,8 @@ extends Resource
 @export var dash_cooldown : float = 0.25
 @export var dash_length : float = 150
 @export var dash_time : float = 0.2
-@export var dash_uninterruptable_percent : float = 0.1
 @export var dash_frozen_percent : float = 0.2
+@export var dash_regain_percent : float = 0.6
 @export var dash_damping_mult : float = 0.3
 @export var dash_upwards_mult : float = 0.55
 @export var dash_downwards_mult : float = 1.1
@@ -53,12 +54,12 @@ extends Resource
 var frozen_dash_time : float:
 	get:
 		return dash_time * dash_frozen_percent
-var uninterruptable_dash_time : float:
-	get:
-		return dash_time * dash_uninterruptable_percent
 var interruptable_dash_time : float:
 	get:
-		return dash_time * (1 - dash_frozen_percent - dash_uninterruptable_percent)
+		return dash_time * (1 - dash_frozen_percent)
+var regain_dash_time : float:
+	get:
+		return interruptable_dash_time * dash_regain_percent
 
 @export_category("Superdash Stats")
 @export var superdash_buffer_time : float = 0.2
@@ -68,3 +69,8 @@ var interruptable_dash_time : float:
 @export var superdash_wall_up_force : Vector2 = Vector2(200, 750)
 @export var superdash_wall_diagonal_force : Vector2 = Vector2(450, 600)
 @export var superdash_wall_straight_force : Vector2 = Vector2(600, 600)
+@export_category("Super Double Jump")
+@export var super_double_up_force : Vector2 = Vector2(0, 400)
+@export var super_double_up_diagonal_force : Vector2 = Vector2(400, 400)
+@export var super_double_straight_force : Vector2 = Vector2(700, 500)
+@export var super_double_down_diagonal_force : Vector2 = Vector2(800, 500)

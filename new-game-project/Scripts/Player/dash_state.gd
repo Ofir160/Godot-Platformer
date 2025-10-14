@@ -3,8 +3,6 @@ class_name DashState
 
 @export var dash_interruptable_state : PlayerState
 
-var time_started_dashing : float
-
 func enter() -> void:
 	super()
 	
@@ -39,20 +37,5 @@ func enter() -> void:
 	if abs(PlayerState.dash_direction.y) > 0.01 and abs(PlayerState.dash_direction.x) < 0.01:
 		parent.body.velocity.x = 0
 	
-	# Sets the time dashed to the current time
-	time_started_dashing = parent.current_time
-	
-func process_input() -> State:
-	# If jumped mid-dash make sure it gets buffered
-	if Input.is_action_just_pressed("jump"):
-		PlayerState.time_jump_pressed = parent.current_time
-	
-	return null
-	
 func physics_update(delta : float) -> State:
-	# Checks if the player has been in this state for long enough
-	if parent.current_time - time_started_dashing > stats.uninterruptable_dash_time:
-		return dash_interruptable_state
-		
-	parent.body.move_and_slide()
-	return null
+	return dash_interruptable_state
