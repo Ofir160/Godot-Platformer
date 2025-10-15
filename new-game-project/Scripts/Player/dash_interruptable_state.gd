@@ -7,6 +7,7 @@ class_name DashInterruptableState
 @export var slide_state : PlayerState
 @export var jump_state : PlayerState
 @export var wall_jump_state : PlayerState
+@export var super_dash_state : PlayerState
 
 var time_started : float
 var time_floored : float
@@ -18,21 +19,24 @@ func enter() -> void:
 	# Sets the time started 
 	time_started = parent.current_time
 	
+	# Resets super dash queue
+	PlayerState.superdash_queued = false
+	
 func process_input() -> State:
 	# If super dashed on the floor
-	if is_jump_buffered() and parent.body.is_on_floor():
+	if PlayerState.superdash_queued and parent.body.is_on_floor():
 		if parent.current_time - time_started > stats.regain_dash_time:
 			PlayerState.dashes_available = stats.dashes
-		return jump_state
+		return super_dash_state
 	# If super dashed on the wall
-	if is_jump_buffered() and parent.body.is_on_wall():
+	if PlayerState.superdash_queued and parent.body.is_on_wall():
 		if parent.current_time - time_started > stats.regain_dash_time:
 			PlayerState.dashes_available = stats.dashes
 		return wall_jump_state
 	
 	# If jumped when not on a wall or floor
-	if Input.is_action_pressed("jump"):
-		PlayerState.time_jump_pressed = parent.current_time
+	if Input.is_action_pressed("jump") and parent.current_time - time_started > stats.early_superdash_time:
+		PlayerState.superdash_queued = true
 	
 	return null
 	
@@ -44,6 +48,7 @@ func physics_update(delta : float) -> State:
 			PlayerState.time_dashed = parent.current_time
 			return move_state
 		elif parent.current_time - time_started > stats.regain_dash_time:
+			# Refils dash if grounded after the regain dash time
 			PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
@@ -51,6 +56,7 @@ func physics_update(delta : float) -> State:
 			PlayerState.time_dashed = parent.current_time
 			return slide_state
 		elif parent.current_time - time_started > stats.regain_dash_time:
+			# Refils dash if walled after the regain dash time
 			PlayerState.dashes_available = stats.dashes
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
@@ -82,6 +88,3 @@ func physics_update(delta : float) -> State:
 	
 	parent.body.move_and_slide()
 	return null
-	
-func is_jump_buffered() -> bool:
-	return (Input.is_action_pressed("jump") or (parent.current_time - PlayerState.time_jump_pressed < stats.jump_buffer_time and PlayerState.time_jump_pressed > 0))

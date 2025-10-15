@@ -6,6 +6,7 @@ class_name IdleState
 @export var air_state : PlayerState
 @export var dash_start_state : PlayerState
 @export var slide_state : PlayerState
+@export var super_dash_state : PlayerState
 
 var move_input : float
 var on_wall : bool
@@ -50,6 +51,11 @@ func process_input() -> State:
 			return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		PlayerState.time_dash_pressed = parent.current_time
+	
+	# Checks if a super dash is queued
+	if PlayerState.superdash_queued and parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time:
+		PlayerState.superdash_queued = false
+		return super_dash_state
 	
 	# Check if a jump is buffered
 	if is_jump_buffered() and parent.body.is_on_floor():

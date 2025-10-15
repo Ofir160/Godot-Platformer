@@ -4,6 +4,7 @@ class_name CoyoteState
 @export var air_state : PlayerState
 @export var jump_state : PlayerState
 @export var dash_start_state : PlayerState
+@export var super_dash_state : PlayerState
 
 var time_left_ground : float
 var accel_rate : float
@@ -28,6 +29,11 @@ func process_input() -> State:
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		PlayerState.time_dash_pressed = parent.current_time
+	
+	# Checks if a super dash is queued
+	if PlayerState.superdash_queued and parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time:
+		PlayerState.superdash_queued = false
+		return super_dash_state
 	
 	# If the player jumps in coyote time the jump will go through
 	if Input.is_action_just_pressed("jump"):

@@ -6,6 +6,8 @@ class_name AirState
 @export var jump_state : PlayerState
 @export var slide_state : PlayerState
 @export var dash_start_state : PlayerState
+@export var double_jump_state : PlayerState
+@export var super_double_jump_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -29,11 +31,24 @@ func process_input() -> State:
 	elif Input.is_action_just_pressed("dash"):
 		PlayerState.time_dash_pressed = parent.current_time
 		
+	var time_since_dashed : float = parent.current_time - PlayerState.time_dashed
+		
+	# Checks if a super double jump is queued
+	if PlayerState.superdash_queued and time_since_dashed > stats.late_superdash_buffer_time and time_since_dashed < (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
+		PlayerState.superdash_queued = false
+		return super_double_jump_state
+		
 	# Checks if the player tried to double jump
 	if Input.is_action_just_pressed("jump"):
 		if PlayerState.double_jump_available:
 			PlayerState.double_jump_available = false
-			return jump_state
+			
+			if time_since_dashed > stats.late_superdash_buffer_time and time_since_dashed < (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
+				return super_double_jump_state
+			elif time_since_dashed > (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
+				return double_jump_state
+			else:
+				PlayerState.superdash_queued = true
 		else:
 			# Sets the time jump was pressed to the current time (used for jump buffering)
 			PlayerState.time_jump_pressed = parent.current_time

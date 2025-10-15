@@ -63,14 +63,21 @@ var regain_dash_time : float:
 		return interruptable_dash_time * dash_regain_percent
 
 @export_category("Superdash Stats")
-@export var superdash_buffer_time : float = 0.2
+@export var early_superdash_buffer_time_percent : float = 0.5
+@export var late_superdash_buffer_time : float = 0.2
 @export var superdash_neck_snap_mult : float = 1.5
 @export var superdash_down_force : Vector2 = Vector2(1000, 450)
 @export var superdash_force : Vector2 = Vector2(800, 600)
 @export var superdash_wall_up_force : Vector2 = Vector2(200, 750)
 @export var superdash_wall_diagonal_force : Vector2 = Vector2(450, 600)
 @export var superdash_wall_straight_force : Vector2 = Vector2(600, 600)
+
+var early_superdash_time : float:
+	get:
+		return interruptable_dash_time * (1 - early_superdash_buffer_time_percent)
+
 @export_category("Super Double Jump")
+@export var super_double_jump_buffer_time : float = 0.2
 @export var super_double_up_force : Vector2 = Vector2(0, 400)
 @export var super_double_up_diagonal_force : Vector2 = Vector2(400, 400)
 @export var super_double_straight_force : Vector2 = Vector2(700, 500)
