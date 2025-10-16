@@ -267,10 +267,9 @@ dash_start_state = NodePath("../Dash Start State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
-[node name="Wall Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("wall_jump_damping_state", "dash_interruptable_state")]
+[node name="Wall Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("wall_jump_damping_state")]
 script = ExtResource("11_gymyn")
 wall_jump_damping_state = NodePath("../Wall Jump Damping State")
-dash_interruptable_state = NodePath("../Dash Interruptable State")
 stats = ExtResource("5_f1ek2")
 
 [node name="Wall Jump Damping State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "dash_start_state")]

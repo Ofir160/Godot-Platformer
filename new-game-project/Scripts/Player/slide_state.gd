@@ -6,6 +6,7 @@ class_name SlideState
 @export var air_state : PlayerState
 @export var wall_jump_state : PlayerState
 @export var dash_start_state : PlayerState
+@export var super_dash_wall_state : PlayerState
 
 var move_input : float
 var dir : float
@@ -44,7 +45,10 @@ func process_input() -> State:
 	
 	# Check if a jump is buffered
 	if is_jump_buffered() and parent.body.is_on_wall():
-		return wall_jump_state
+		if parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time:
+			return super_dash_wall_state
+		else:
+			return wall_jump_state
 		
 	return null
 
