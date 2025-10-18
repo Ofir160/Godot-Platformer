@@ -13,6 +13,7 @@ func enter() -> void:
 	# Make sure the player is not falling
 	parent.body.velocity.y = min(parent.body.velocity.y, 0)
 	
+	# Dampens vertical momentum
 	parent.body.velocity.y *= stats.superdash_vertical_damping
 	
 	# Gets the player's movement direction
