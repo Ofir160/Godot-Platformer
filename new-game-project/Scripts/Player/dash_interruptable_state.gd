@@ -8,6 +8,7 @@ class_name DashInterruptableState
 @export var jump_state : PlayerState
 @export var wall_jump_state : PlayerState
 @export var super_dash_state : PlayerState
+@export var super_dash_wall_state : PlayerState
 
 var time_started : float
 var time_floored : float
@@ -32,7 +33,11 @@ func process_input() -> State:
 	if PlayerState.superdash_queued and parent.body.is_on_wall():
 		if parent.current_time - time_started > stats.regain_dash_time:
 			PlayerState.dashes_available = stats.dashes
-		return wall_jump_state
+		return super_dash_wall_state
+	
+	# If dashed whilst in a dash
+	if Input.is_action_just_pressed("dash"):
+		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
 	# If jumped when not on a wall or floor
 	if Input.is_action_pressed("jump") and parent.current_time - time_started > stats.early_superdash_time:

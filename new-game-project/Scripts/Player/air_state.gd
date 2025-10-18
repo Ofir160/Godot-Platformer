@@ -29,7 +29,7 @@ func process_input() -> State:
 	if is_dash_buffered() and dash_available():
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
-		PlayerState.time_dash_pressed = parent.current_time
+		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 		
 	var time_since_dashed : float = parent.current_time - PlayerState.time_dashed
 		
@@ -50,8 +50,7 @@ func process_input() -> State:
 			else:
 				PlayerState.superdash_queued = true
 		else:
-			# Sets the time jump was pressed to the current time (used for jump buffering)
-			PlayerState.time_jump_pressed = parent.current_time
+			parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
 	
 	return null
 
@@ -124,4 +123,4 @@ func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
 
 func is_dash_buffered() -> bool:
-	return Input.is_action_just_pressed("dash") or (parent.current_time - PlayerState.time_dash_pressed < stats.dash_buffer_time and PlayerState.time_dash_pressed > 0)
+	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")

@@ -29,9 +29,9 @@ func process_input() -> State:
 		parent.animated_sprite.flip_h = true
 		
 	if Input.is_action_just_pressed("dash"):
-		PlayerState.time_dash_pressed = parent.current_time
+		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	if Input.is_action_just_pressed("jump"):
-		PlayerState.time_jump_pressed = parent.current_time
+		parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
 	
 	return null
 
