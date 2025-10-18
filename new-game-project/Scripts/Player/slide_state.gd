@@ -44,7 +44,7 @@ func process_input() -> State:
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
 	# Check if a jump is buffered
-	if is_jump_buffered() and parent.body.is_on_wall():
+	if is_jump_buffered() and is_wall_jump_available():
 		if parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time:
 			return super_dash_wall_state
 		else:
@@ -83,7 +83,10 @@ func physics_update(delta : float) -> State:
 	return null
 	
 func is_jump_buffered() -> bool:
-	return (Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")) and parent.current_time - time_wall_jumped > stats.wall_jump_cooldown
+	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
+	
+func is_wall_jump_available() -> bool:
+	return parent.timer_manager.query_timer("Wall jump cooldown") and parent.body.is_on_wall()
 	
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)

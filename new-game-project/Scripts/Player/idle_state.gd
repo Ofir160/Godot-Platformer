@@ -37,18 +37,8 @@ func process_input() -> State:
 	move_input = Input.get_axis("move_left", "move_right")
 	
 	# Checks if the player has dashed
-	if is_dash_buffered() and dash_available():
-		var looking_up : bool = Input.is_action_pressed("look_up")
-		var looking_down : bool = Input.is_action_pressed("look_down")
-		
-		# Stops the dash if dashing down into the floor
-		var dashing_down : bool = looking_down and abs(move_input) < 0.01
-		# Stops the dash if dashing straight into a wall
-		var dashing_into_wall : bool = abs(move_input) > 0.01 and sign(move_input) == dir and not looking_up and on_wall
-		# Stops the dash if dashing straight into a wall but idle
-		var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up and on_wall
-		if not dashing_down and not dashing_into_wall and not idle_dashing_into_wall:
-			return dash_start_state
+	if is_dash_buffered() and dash_available() and is_dash_direction_valid():
+		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
@@ -58,7 +48,7 @@ func process_input() -> State:
 		return super_dash_state
 	
 	# Check if a jump is buffered
-	if is_jump_buffered() and parent.body.is_on_floor():
+	if is_jump_buffered() and is_jump_available():
 		return jump_state
 		
 	return null
@@ -79,11 +69,27 @@ func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()
 	return null
 	
+# If you 
 func is_jump_buffered() -> bool:
-	return (Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")) and parent.current_time - time_jumped > stats.jump_cooldown
+	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
+
+func is_jump_available() -> bool:
+	return parent.timer_manager.query_timer("Jump cooldown") and parent.body.is_on_floor()
 
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
 
 func is_dash_buffered() -> bool:
 	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")
+	
+func is_dash_direction_valid() -> bool:
+	var looking_up : bool = Input.is_action_pressed("look_up")
+	var looking_down : bool = Input.is_action_pressed("look_down")
+	
+	# Stops the dash if dashing down into the floor
+	var dashing_down : bool = looking_down and abs(move_input) < 0.01
+	# Stops the dash if dashing straight into a wall
+	var dashing_into_wall : bool = abs(move_input) > 0.01 and sign(move_input) == dir and not looking_up and on_wall
+	# Stops the dash if dashing straight into a wall but idle
+	var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up and on_wall
+	return not dashing_down and not dashing_into_wall and not idle_dashing_into_wall

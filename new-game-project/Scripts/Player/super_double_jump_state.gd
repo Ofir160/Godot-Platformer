@@ -54,8 +54,8 @@ func enter() -> void:
 		# Cancel jump
 		parent.body.velocity.y -= stats.jump_force
 	
-	# Sets the time jumped to the current time
-	PlayerState.time_jumped = parent.current_time
+	# Sets the jump cooldown timer
+	parent.timer_manager.set_timer("Jump cooldown", stats.jump_cooldown)
 	
 func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()

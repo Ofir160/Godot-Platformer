@@ -29,8 +29,8 @@ func enter() -> void:
 		parent.body.velocity.y -= stats.superdash_wall_straight_force.y
 		parent.body.velocity.x += stats.superdash_wall_straight_force.x * -dir
 	
-	# Sets the time wall jumped to the current time
-	PlayerState.time_wall_jumped = parent.current_time
+	# Sets the jump cooldown timer
+	parent.timer_manager.set_timer("Wall jump cooldown", stats.jump_cooldown)
 	
 func physics_update(delta : float) -> State:
 	return wall_jump_damping_state

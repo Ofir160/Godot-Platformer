@@ -40,17 +40,17 @@ func process_input() -> State:
 		
 	# Checks if the player tried to double jump
 	if Input.is_action_just_pressed("jump"):
-		if PlayerState.double_jump_available:
-			PlayerState.double_jump_available = false
-			
-			if time_since_dashed > stats.late_superdash_buffer_time and time_since_dashed < (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
-				return super_double_jump_state
-			elif time_since_dashed > (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
-				return double_jump_state
-			else:
-				PlayerState.superdash_queued = true
-		else:
-			parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
+		#if PlayerState.double_jump_available:
+			#PlayerState.double_jump_available = false
+			#
+			#if time_since_dashed > stats.late_superdash_buffer_time and time_since_dashed < (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
+				#return super_double_jump_state
+			#elif time_since_dashed > (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
+				#return double_jump_state
+			#else:
+				#PlayerState.superdash_queued = true
+		#else:
+		parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
 	
 	return null
 

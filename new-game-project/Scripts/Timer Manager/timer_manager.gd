@@ -14,12 +14,12 @@ func update(delta : float) -> void:
 
 ## Sets the timer
 func set_timer(name : String, duration : float) -> void:
-	timers.set(name, duration)
+	timers.set(name.to_upper(), duration)
 	
 ## Checks if the timer is finished. Returns true if timer is finished or if it doesn't exist
 func query_timer(name : String) -> bool:
-	if timers.has(name):
-		var time_left : float = timers.get(name)
+	if timers.has(name.to_upper()):
+		var time_left : float = timers.get(name.to_upper())
 		
 		if time_left <= 0:
 			return true

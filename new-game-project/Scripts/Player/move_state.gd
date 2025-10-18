@@ -45,7 +45,7 @@ func process_input() -> State:
 		return super_dash_state
 	
 	# Checks if a jump is buffered
-	if is_jump_buffered() and parent.body.is_on_floor():
+	if is_jump_buffered() and is_jump_available():
 		return jump_state
 	
 	return null
@@ -83,7 +83,10 @@ func physics_update(delta : float) -> State:
 	return null
 
 func is_jump_buffered() -> bool:
-	return (Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")) and parent.current_time - PlayerState.time_jumped > stats.jump_cooldown
+	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
+	
+func is_jump_available() -> bool:
+	return parent.timer_manager.query_timer("Jump cooldown") and parent.body.is_on_floor()
 	
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
