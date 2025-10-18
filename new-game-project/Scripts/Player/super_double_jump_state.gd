@@ -14,8 +14,11 @@ func enter() -> void:
 	# Makes sure the player is not falling
 	parent.body.velocity.y = min(parent.body.velocity.y, 0)
 	
+	# Dampens vertical momentum
+	parent.body.velocity.y *= stats.super_double_jump_vertical_damping
+	
 	# Dampens horizontal momentum
-	parent.body.velocity.x *= stats.jump_velocity_damping
+	parent.body.velocity.x *= stats.super_double_jump_horizontal_damping
 	
 	if abs(PlayerState.dash_direction.x) < 0.01 and PlayerState.dash_direction.y < -0.01:
 		# Super double jump upwards
@@ -57,9 +60,12 @@ func enter() -> void:
 	# Sets the jump cooldown timer
 	parent.timer_manager.set_timer("Jump cooldown", stats.jump_cooldown)
 	
+	# Consumes the superdash
+	PlayerState.superdash_queued = false
+	
+	# Consumes the double jump
+	PlayerState.double_jump_available = false
+	
 func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()
 	return air_state
-	
-func superdash_buffer_available() -> bool:
-	return (parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time and PlayerState.time_dashed > 0)

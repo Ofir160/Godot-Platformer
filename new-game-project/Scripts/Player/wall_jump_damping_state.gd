@@ -13,8 +13,9 @@ var move_back : bool
 func enter() -> void:
 	super()
 	
-	# Sets the time entered to the current time (in order to know when to leave the state)
-	time_entered = parent.current_time
+	# Sets the damping timer
+	parent.timer_manager.set_timer("Wall jump damping", stats.wall_jump_damping_time)
+	
 	# Saves the direction of the wall
 	dir = -sign(parent.body.get_wall_normal().x)
 	
@@ -36,10 +37,6 @@ func process_input() -> State:
 	return null
 
 func physics_update(delta : float) -> State:
-	# Checks if the player has been in the state for enough time
-	if parent.current_time - time_entered > stats.wall_jump_damping_time:
-		return air_state
-	
 	var target_speed : float = move_input * stats.move_speed
 	# Dampen the target speed reducing how much the player can move
 	target_speed = lerp(target_speed, parent.body.velocity.x, 1 - stats.wall_jump_damping_strength)
@@ -71,11 +68,16 @@ func physics_update(delta : float) -> State:
 	# Make sure the player isn't falling too fast
 	parent.body.velocity.y = min(parent.body.velocity.y, stats.max_fall_speed)
 	
+	# Checks if the player has been in the state for enough time
+	if parent.timer_manager.query_timer("Wall jump damping"):
+		return air_state
+		
 	parent.body.move_and_slide()
+		
 	return null
 	
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and input > 0.01
 	
 func dash_available() -> bool:
-	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")

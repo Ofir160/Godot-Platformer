@@ -43,13 +43,16 @@ func process_input() -> State:
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
 	# Checks if a super dash is queued
-	if PlayerState.superdash_queued and parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time:
+	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
 		PlayerState.superdash_queued = false
 		return super_dash_state
 	
 	# Check if a jump is buffered
 	if is_jump_buffered() and is_jump_available():
-		return jump_state
+		if not parent.timer_manager.query_timer("Late superdash"):
+			return super_dash_state
+		else:
+			return jump_state
 		
 	return null
 
@@ -77,7 +80,7 @@ func is_jump_available() -> bool:
 	return parent.timer_manager.query_timer("Jump cooldown") and parent.body.is_on_floor()
 
 func dash_available() -> bool:
-	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
 
 func is_dash_buffered() -> bool:
 	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")

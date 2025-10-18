@@ -10,8 +10,10 @@ func enter() -> void:
 	
 	var dir : float = -sign(parent.body.get_wall_normal().x)
 	
-	# Dampens upwards momentum
-	parent.body.velocity.y = min(parent.body.velocity.y * stats.wall_jump_velocity_damping, 0)
+	# Make sure the player is not falling
+	parent.body.velocity.y = min(parent.body.velocity.y, 0)
+	
+	parent.body.velocity.y *= stats.superdash_vertical_damping
 	
 	# Gets the player's movement direction
 	var move_input : float = Input.get_axis("move_left", "move_right")
@@ -31,6 +33,9 @@ func enter() -> void:
 	
 	# Sets the jump cooldown timer
 	parent.timer_manager.set_timer("Wall jump cooldown", stats.jump_cooldown)
+	
+	# Consumes the superdash
+	PlayerState.superdash_queued = false
 	
 func physics_update(delta : float) -> State:
 	return wall_jump_damping_state

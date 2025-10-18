@@ -6,13 +6,14 @@ class_name CoyoteState
 @export var dash_start_state : PlayerState
 @export var super_dash_state : PlayerState
 
-var time_left_ground : float
 var accel_rate : float
 var move_input : float
 
 func enter() -> void:
 	super()
-	time_left_ground = parent.current_time
+	
+	# Sets coyote timer
+	parent.timer_manager.set_timer("Coyote", stats.coyote_time)
 	
 func process_input() -> State:
 	# Gets the player's movement direction
@@ -31,17 +32,16 @@ func process_input() -> State:
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
 	# Checks if a super dash is queued
-	if PlayerState.superdash_queued and parent.current_time - PlayerState.time_dashed < stats.late_superdash_buffer_time:
+	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
 		PlayerState.superdash_queued = false
 		return super_dash_state
 	
 	# If the player jumps in coyote time the jump will go through
 	if Input.is_action_just_pressed("jump"):
-		return jump_state
-		
-	# If coyote time is finished move to air state
-	if parent.current_time - time_left_ground > stats.coyote_time:
-		return air_state
+		if not parent.timer_manager.query_timer("Late superdash"):
+			return super_dash_state
+		else:
+			return jump_state
 	
 	return null
 
@@ -65,14 +65,19 @@ func physics_update(delta : float) -> State:
 	# Make sure the player isn't falling too fast
 	parent.body.velocity.y = min(parent.body.velocity.y, stats.max_fall_speed)
 	
+	# If coyote time is finished move to air state
+	if parent.timer_manager.query_timer("Coyote"):
+		return air_state
+		
 	parent.body.move_and_slide()
+	
 	return null
 
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
 
 func dash_available() -> bool:
-	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
 
 func is_dash_buffered() -> bool:
 	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")

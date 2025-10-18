@@ -14,19 +14,24 @@ func enter() -> void:
 	# Makes sure the player is not falling
 	parent.body.velocity.y = min(parent.body.velocity.y, 0)
 	
-	# When double jumping reduce previous upward momentum
-	parent.body.velocity.y *= 0.3
+	# Dampens vertical momentum
+	parent.body.velocity.y *= stats.double_jump_vertical_damping
+	
+	# Adds the double jump jump force
 	parent.body.velocity.y -= stats.double_jump_force
 		
 	if not is_speeding(move_input):
 		# Dampens horizontal momentum
-		parent.body.velocity.x *= stats.jump_velocity_damping
+		parent.body.velocity.x *= stats.double_jump_horizontal_damping
 	else:
 		# Boosts horizontal speed
-		parent.body.velocity.x *= stats.double_jump_velocity_boost
+		parent.body.velocity.x *= stats.double_jump_speeding_horizontal_boost
 	
 	# Sets the jump cooldown timer
 	parent.timer_manager.set_timer("Jump cooldown", stats.jump_cooldown)
+	
+	# Consumes the double jump
+	PlayerState.double_jump_available = false
 	
 func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()

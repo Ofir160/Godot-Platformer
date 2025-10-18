@@ -30,27 +30,22 @@ func process_input() -> State:
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
-		
-	var time_since_dashed : float = parent.current_time - PlayerState.time_dashed
-		
-	# Checks if a super double jump is queued
-	if PlayerState.superdash_queued and time_since_dashed > stats.late_superdash_buffer_time and time_since_dashed < (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
-		PlayerState.superdash_queued = false
+	
+	# Checks if a super dash is queued and it should be used as a super double jump
+	if PlayerState.superdash_queued and PlayerState.double_jump_available and parent.timer_manager.query_timer("Super double jump delay"):
 		return super_double_jump_state
 		
 	# Checks if the player tried to double jump
 	if Input.is_action_just_pressed("jump"):
-		#if PlayerState.double_jump_available:
-			#PlayerState.double_jump_available = false
-			#
-			#if time_since_dashed > stats.late_superdash_buffer_time and time_since_dashed < (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
-				#return super_double_jump_state
-			#elif time_since_dashed > (stats.super_double_jump_buffer_time + stats.late_superdash_buffer_time):
-				#return double_jump_state
-			#else:
-				#PlayerState.superdash_queued = true
-		#else:
-		parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
+		# If you can double jump
+		if PlayerState.double_jump_available:
+			if not parent.timer_manager.query_timer("Late superdash"):
+				parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
+				PlayerState.superdash_queued = true
+			else:
+				return double_jump_state
+		else:
+			parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
 	
 	return null
 
@@ -120,7 +115,10 @@ func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
 
 func dash_available() -> bool:
-	return PlayerState.dashes_available > 0 and (parent.current_time - time_dashed > stats.dash_cooldown or time_dashed < 0.01)
+	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
 
 func is_dash_buffered() -> bool:
 	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")
+
+func is_jump_available() -> bool:
+	return parent.timer_manager.query_timer("Jump cooldown")

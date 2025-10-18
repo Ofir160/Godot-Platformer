@@ -9,6 +9,7 @@ class_name DashInterruptableState
 @export var wall_jump_state : PlayerState
 @export var super_dash_state : PlayerState
 @export var super_dash_wall_state : PlayerState
+@export var super_double_jump_state : PlayerState
 
 var time_started : float
 var time_floored : float
@@ -20,59 +21,86 @@ func enter() -> void:
 	# Sets the time started 
 	time_started = parent.current_time
 	
-	# Resets super dash queue
-	PlayerState.superdash_queued = false
+	# Sets the dash timer
+	parent.timer_manager.set_timer("Dash", stats.interruptable_dash_time)
+	
+	# Sets the regain dash timer
+	parent.timer_manager.set_timer("Regain dash", stats.regain_dash_time)
 	
 func process_input() -> State:
-	# If super dashed on the floor
-	if PlayerState.superdash_queued and parent.body.is_on_floor():
-		if parent.current_time - time_started > stats.regain_dash_time:
-			PlayerState.dashes_available = stats.dashes
-		return super_dash_state
-	# If super dashed on the wall
-	if PlayerState.superdash_queued and parent.body.is_on_wall():
-		if parent.current_time - time_started > stats.regain_dash_time:
-			PlayerState.dashes_available = stats.dashes
-		return super_dash_wall_state
 	
 	# If dashed whilst in a dash
 	if Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
 	# If jumped when not on a wall or floor
-	if Input.is_action_pressed("jump") and parent.current_time - time_started > stats.early_superdash_time:
+	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
+		
+		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
 	
 	return null
 	
 func physics_update(delta : float) -> State:
-	# Checks if your dash hit an obstacle and stopped moving
+	
 	if parent.body.is_on_floor():
-		if abs(parent.body.velocity.x) < 0.01:
-			# Sets the time dashed to the current time
-			PlayerState.time_dashed = parent.current_time
+		if abs(parent.body.velocity.x) < 0.01 and parent.body.velocity.y > 0:
+			# Sets the dash cooldown timer
+			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
+			# Sets the late superdash timer
+			parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
+			
 			return move_state
-		elif parent.current_time - time_started > stats.regain_dash_time:
+		elif parent.timer_manager.query_timer("Regain dash"):
 			# Refils dash if grounded after the regain dash time
 			PlayerState.dashes_available = stats.dashes
+		if PlayerState.superdash_queued:
+			# Sets the dash cooldown timer
+			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
+			return super_dash_state
+	
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
-			# Sets the time dashed to the current time
-			PlayerState.time_dashed = parent.current_time
+			# Sets the dash cooldown timer
+			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
+			# Sets the late superdash timer
+			parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
+			
 			return slide_state
-		elif parent.current_time - time_started > stats.regain_dash_time:
+		elif parent.timer_manager.query_timer("Regain dash"):
 			# Refils dash if walled after the regain dash time
 			PlayerState.dashes_available = stats.dashes
+		if PlayerState.superdash_queued:
+			# Sets the dash cooldown timer
+			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
+			return super_dash_wall_state
+	
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
-			# Sets the time dashed to the current time
-			PlayerState.time_dashed = parent.current_time
+			# Sets the dash cooldown timer
+			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
 			return air_state
 	
+	if PlayerState.superdash_queued and parent.timer_manager.query_timer("Super double jump delay"):
+		if not parent.body.is_on_floor() and not parent.body.is_on_wall():
+			# Sets the dash cooldown timer
+			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
+			return super_double_jump_state
+	
 	# Check if the dash has ended
-	if parent.current_time - time_started > stats.interruptable_dash_time:
-		# Sets the time dashed to the current time
-		PlayerState.time_dashed = parent.current_time
+	if parent.timer_manager.query_timer("Dash"):
+		# Sets the dash cooldown timer
+		parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+		
+		# Sets the late superdash timer
+		parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
+		
 		# If ended dash on the floor go to move state
 		if parent.body.is_on_floor():
 			return move_state
