@@ -74,8 +74,10 @@ var regain_dash_time : float:
 @export var superdash_neck_snap_mult : float = 1.5
 @export var superdash_horizontal_damping : float = 0.3
 @export var superdash_vertical_damping : float = 0.9
+@export var superdash_freeze_time : float = 0.1
 @export var superdash_down_force : Vector2 = Vector2(1000, 450)
 @export var superdash_straight_force : Vector2 = Vector2(800, 600)
+@export var superdash_wall_freeze_time : float = 0.1
 @export var superdash_wall_up_force : Vector2 = Vector2(200, 750)
 @export var superdash_wall_diagonal_force : Vector2 = Vector2(450, 600)
 @export var superdash_wall_straight_force : Vector2 = Vector2(600, 600)
@@ -84,6 +86,7 @@ var regain_dash_time : float:
 @export var super_double_jump_delay : float = 0.2
 @export var super_double_jump_horizontal_damping : float = 0.4
 @export var super_double_jump_vertical_damping : float = 0.2
+@export var super_double_jump_freeze_time : float = 0.1
 @export var super_double_up_force : Vector2 = Vector2(0, 400)
 @export var super_double_up_diagonal_force : Vector2 = Vector2(400, 400)
 @export var super_double_straight_force : Vector2 = Vector2(700, 500)

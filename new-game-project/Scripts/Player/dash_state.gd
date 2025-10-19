@@ -37,5 +37,13 @@ func enter() -> void:
 	if abs(PlayerState.dash_direction.y) > 0.01 and abs(PlayerState.dash_direction.x) < 0.01:
 		parent.body.velocity.x = 0
 	
+func process_input() -> State:
+	if Input.is_action_just_pressed("jump"):
+		PlayerState.superdash_queued = true
+		
+		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
+	
+	return null
+	
 func physics_update(delta : float) -> State:
 	return dash_interruptable_state

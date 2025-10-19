@@ -26,6 +26,7 @@ func enter() -> void:
 	elif abs(PlayerState.dash_direction.x) > 0.01 and PlayerState.dash_direction.y < -0.01:
 		# Super double jump up diagonally
 		parent.body.velocity.y -= stats.super_double_up_diagonal_force.y
+		
 		if abs(move_input) > 0.01:
 			if sign(move_input) != sign(parent.body.velocity.x):
 				parent.body.velocity.x = stats.super_double_up_diagonal_force.x * sign(move_input) * stats.superdash_neck_snap_mult

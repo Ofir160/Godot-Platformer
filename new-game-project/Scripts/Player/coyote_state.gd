@@ -4,7 +4,7 @@ class_name CoyoteState
 @export var air_state : PlayerState
 @export var jump_state : PlayerState
 @export var dash_start_state : PlayerState
-@export var super_dash_state : PlayerState
+@export var super_dash_start_state : PlayerState
 
 var accel_rate : float
 var move_input : float
