@@ -7,9 +7,9 @@ class_name DashInterruptableState
 @export var slide_state : PlayerState
 @export var jump_state : PlayerState
 @export var wall_jump_state : PlayerState
-@export var super_dash_start_state : PlayerState
-@export var super_dash_wall_start_state : PlayerState
-@export var super_double_jump_start_state : PlayerState
+@export var super_dash_state : PlayerState
+@export var super_dash_wall_state : PlayerState
+@export var super_double_jump_state : PlayerState
 
 var time_started : float
 var time_floored : float
@@ -60,7 +60,7 @@ func physics_update(delta : float) -> State:
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			if PlayerState.dash_direction.y >= 0:
-				return super_dash_start_state
+				return super_dash_state
 	
 	if parent.body.is_on_wall():
 		if abs(parent.body.velocity.y) < 0.01:
@@ -78,7 +78,7 @@ func physics_update(delta : float) -> State:
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
-			return super_dash_wall_start_state
+			return super_dash_wall_state
 	
 	if parent.body.is_on_ceiling():
 		if abs(parent.body.velocity.x) < 0.01:
@@ -93,7 +93,7 @@ func physics_update(delta : float) -> State:
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			if PlayerState.double_jump_available:
-				return super_double_jump_start_state
+				return super_double_jump_state
 	
 	# Check if the dash has ended
 	if parent.timer_manager.query_timer("Dash"):

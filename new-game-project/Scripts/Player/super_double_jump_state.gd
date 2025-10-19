@@ -56,7 +56,7 @@ func enter() -> void:
 			parent.body.velocity.x += stats.super_double_down_diagonal_force.x * (-1 if parent.animated_sprite.flip_h else 1)
 	else:
 		# Cancel jump
-		parent.body.velocity.y -= stats.jump_force
+		parent.body.velocity.y -= stats.super_double_down_force.y
 	
 	# Sets the jump cooldown timer
 	parent.timer_manager.set_timer("Jump cooldown", stats.jump_cooldown)

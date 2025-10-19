@@ -3,6 +3,8 @@ class_name SuperDashState
 
 @export var air_state : PlayerState
 
+var move_input : float
+
 func enter() -> void:
 	super()
 	
@@ -15,25 +17,28 @@ func enter() -> void:
 	# Dampens horizontal momentum
 	parent.body.velocity.x *= stats.superdash_horizontal_damping
 	
+	# Gets the player's movement direction
+	move_input = Input.get_axis("move_left", "move_right")
+	
 	# When super dashing increase force
 	if abs(PlayerState.dash_direction.y) > 0.01 and abs(PlayerState.dash_direction.x) > 0.01:
 		# If doing a down superdash
 		parent.body.velocity.y -= stats.superdash_down_force.y
-		if abs(PlayerState.super_direction) > 0.01:
-			if sign(PlayerState.super_direction) != sign(parent.body.velocity.x):
-				parent.body.velocity.x = stats.superdash_down_force.x * sign(PlayerState.super_direction) * stats.superdash_neck_snap_mult
+		if abs(move_input) > 0.01:
+			if sign(move_input) != sign(parent.body.velocity.x):
+				parent.body.velocity.x = stats.superdash_down_force.x * sign(move_input) * stats.superdash_neck_snap_mult
 			else:
-				parent.body.velocity.x += stats.superdash_down_force.x * sign(PlayerState.super_direction)
+				parent.body.velocity.x += stats.superdash_down_force.x * sign(move_input)
 		else:
 			parent.body.velocity.x += stats.superdash_down_force.x * (-1 if parent.animated_sprite.flip_h else 1)
 	elif abs(PlayerState.dash_direction.y) < 0.01:
 		# If doing a straight superdash
 		parent.body.velocity.y -= stats.superdash_straight_force.y
-		if abs(PlayerState.super_direction) > 0.01:
-			if sign(PlayerState.super_direction) != sign(parent.body.velocity.x):
-				parent.body.velocity.x = stats.superdash_straight_force.x * sign(PlayerState.super_direction) * stats.superdash_neck_snap_mult
+		if abs(move_input) > 0.01:
+			if sign(move_input) != sign(parent.body.velocity.x):
+				parent.body.velocity.x = stats.superdash_straight_force.x * sign(move_input) * stats.superdash_neck_snap_mult
 			else:
-				parent.body.velocity.x += stats.superdash_straight_force.x * sign(PlayerState.super_direction)
+				parent.body.velocity.x += stats.superdash_straight_force.x * sign(move_input)
 		else:
 			parent.body.velocity.x += stats.superdash_straight_force.x * (-1 if parent.animated_sprite.flip_h else 1)
 	

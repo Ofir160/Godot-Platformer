@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=44 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
@@ -18,7 +18,6 @@
 [ext_resource type="Script" uid="uid://beww8nna4vm1o" path="res://Scripts/Player/super_dash_state.gd" id="16_fd4e3"]
 [ext_resource type="Script" uid="uid://b7mnmufcy5ww1" path="res://Scripts/Player/double_jump_state.gd" id="17_qqcod"]
 [ext_resource type="Script" uid="uid://c0dldphyotaa1" path="res://Scripts/Player/super_double_jump_state.gd" id="18_igrcy"]
-[ext_resource type="Script" uid="uid://criihjuogg0yw" path="res://Scripts/Player/super_dash_start_state_state.gd" id="18_olqyp"]
 [ext_resource type="Script" uid="uid://c3pwrogdugptq" path="res://Scripts/Player/super_dash_wall_state.gd" id="19_fs7ks"]
 [ext_resource type="Script" uid="uid://b8hnx4oovl3ah" path="res://Scripts/Timer Manager/timer_manager.gd" id="20_l6n3p"]
 
@@ -295,7 +294,7 @@ dash_interruptable_state = NodePath("../Dash Interruptable State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
-[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state")]
+[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state", "super_dash_state", "super_dash_wall_state", "super_double_jump_state")]
 script = ExtResource("14_7dp3o")
 air_state = NodePath("../Air State")
 move_state = NodePath("../Move State")
@@ -303,6 +302,9 @@ idle_state = NodePath("../Idle State")
 slide_state = NodePath("../Slide State")
 jump_state = NodePath("../Jump State")
 wall_jump_state = NodePath("../Wall Jump State")
+super_dash_state = NodePath("../Super Dash State")
+super_dash_wall_state = NodePath("../Super Dash Wall State")
+super_double_jump_state = NodePath("../Super Double Jump State")
 stats = ExtResource("5_f1ek2")
 animation_name = "Jump"
 
@@ -314,11 +316,6 @@ stats = ExtResource("5_f1ek2")
 [node name="Super Dash State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
 script = ExtResource("16_fd4e3")
 air_state = NodePath("../Air State")
-stats = ExtResource("5_f1ek2")
-
-[node name="Super Dash Start State" type="Node" parent="State Machine" node_paths=PackedStringArray("super_dash_state")]
-script = ExtResource("18_olqyp")
-super_dash_state = NodePath("../Super Dash State")
 stats = ExtResource("5_f1ek2")
 
 [node name="Super Double Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
