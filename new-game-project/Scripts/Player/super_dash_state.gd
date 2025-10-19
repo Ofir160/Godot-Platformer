@@ -21,6 +21,7 @@ func enter() -> void:
 		parent.body.velocity.y -= stats.superdash_down_force.y
 		if abs(PlayerState.super_direction) > 0.01:
 			if sign(PlayerState.super_direction) != sign(parent.body.velocity.x):
+				print("Snap")
 				parent.body.velocity.x = stats.superdash_down_force.x * sign(PlayerState.super_direction) * stats.superdash_neck_snap_mult
 			else:
 				parent.body.velocity.x += stats.superdash_down_force.x * sign(PlayerState.super_direction)

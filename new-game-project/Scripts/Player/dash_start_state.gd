@@ -49,9 +49,8 @@ func process_input() -> State:
 	return null
 	
 func physics_update(delta : float) -> State:
-	parent.body.move_and_slide()
-	
 	if parent.timer_manager.query_timer("Dash start"):
 		return dash_state
-		
+	
+	parent.body.move_and_slide()
 	return null

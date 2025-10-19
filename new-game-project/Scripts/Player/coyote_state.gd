@@ -34,12 +34,12 @@ func process_input() -> State:
 	# Checks if a super dash is queued
 	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
 		PlayerState.superdash_queued = false
-		return super_dash_state
+		return super_dash_start_state
 	
 	# If the player jumps in coyote time the jump will go through
 	if Input.is_action_just_pressed("jump"):
 		if not parent.timer_manager.query_timer("Late superdash"):
-			return super_dash_state
+			return super_dash_start_state
 		else:
 			return jump_state
 	

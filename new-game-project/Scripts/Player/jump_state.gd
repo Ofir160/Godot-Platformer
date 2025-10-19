@@ -2,7 +2,6 @@ extends PlayerState
 class_name JumpState
 
 @export var air_state : PlayerState
-@export var dash_interruptable_state : PlayerState
 
 var move_input : float
 

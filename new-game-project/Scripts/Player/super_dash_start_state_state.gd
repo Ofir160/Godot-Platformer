@@ -22,11 +22,12 @@ func enter() -> void:
 	PlayerState.super_direction = move_input
 	
 func process_input() -> State:
-	
 	var new_move_input : float = Input.get_axis("move_left", "move_right")
 	
-	if sign(move_input) != sign(new_move_input):
+	if abs(new_move_input) > 0.01 and sign(move_input) != sign(new_move_input):
 		move_input = new_move_input
+		
+		print("Swapped directions")
 		
 		# Flips character depending on movement direction
 		if move_input > 0:

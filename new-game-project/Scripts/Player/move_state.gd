@@ -5,7 +5,7 @@ class_name MoveState
 @export var jump_state : PlayerState
 @export var coyote_state : PlayerState
 @export var dash_start_state : PlayerState
-@export var super_dash_state : PlayerState
+@export var super_dash_start_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -39,12 +39,12 @@ func process_input() -> State:
 	# Checks if a super dash is queued
 	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
 		PlayerState.superdash_queued = false
-		return super_dash_state
+		return super_dash_start_state
 	
 	# Checks if a jump is buffered
 	if is_jump_buffered() and is_jump_available():
 		if not parent.timer_manager.query_timer("Late superdash"):
-			return super_dash_state
+			return super_dash_start_state
 		else:
 			return jump_state
 	

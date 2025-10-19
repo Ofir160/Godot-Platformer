@@ -7,7 +7,7 @@ class_name AirState
 @export var slide_state : PlayerState
 @export var dash_start_state : PlayerState
 @export var double_jump_state : PlayerState
-@export var super_double_jump_state : PlayerState
+@export var super_double_jump_start_state : PlayerState
 @export var dash_interruptable_state : PlayerState
 
 var accel_rate : float
@@ -34,7 +34,7 @@ func process_input() -> State:
 	
 	# Checks if a super dash is queued and it should be used as a super double jump
 	if PlayerState.superdash_queued and PlayerState.double_jump_available and parent.timer_manager.query_timer("Super double jump delay") and previous_state == dash_interruptable_state:
-		return super_double_jump_state
+		return super_double_jump_start_state
 		
 	# Checks if the player tried to double jump
 	if Input.is_action_just_pressed("jump"):
