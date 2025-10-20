@@ -308,6 +308,10 @@ wall_jump_state = NodePath("../Wall Jump State")
 super_dash_state = NodePath("../Super Dash State")
 super_dash_wall_state = NodePath("../Super Dash Wall State")
 super_double_jump_state = NodePath("../Super Double Jump State")
+<<<<<<< HEAD
+=======
+stats = ExtResource("5_f1ek2")
+>>>>>>> 229028fd398494695161919295fadf3a851ab744
 animation_name = "Jump"
 stats = ExtResource("5_f1ek2")
 
