@@ -12,4 +12,4 @@ static var superdash_queued : bool
 
 func enter() -> void:
 	super()
-	parent.animated_sprite.play(animation_name)
+	parent.sprite.play(animation_name)

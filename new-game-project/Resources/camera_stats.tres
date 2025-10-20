@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CameraStats" load_steps=2 format=3 uid="uid://c62ddptoknlcx"]
+
+[ext_resource type="Script" uid="uid://b2q70u3eomxen" path="res://Scripts/Camera/camera_stats.gd" id="1_37pcq"]
+
+[resource]
+script = ExtResource("1_37pcq")
+x_damping_strength = 2.0
+y_damping_strength = 5.3
+bias_length = 150.0
+metadata/_custom_type_script = "uid://b2q70u3eomxen"

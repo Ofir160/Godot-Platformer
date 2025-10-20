@@ -30,7 +30,7 @@ func enter() -> void:
 			else:
 				parent.body.velocity.x += stats.superdash_down_force.x * sign(move_input)
 		else:
-			parent.body.velocity.x += stats.superdash_down_force.x * (-1 if parent.animated_sprite.flip_h else 1)
+			parent.body.velocity.x += stats.superdash_down_force.x * (-1 if parent.sprite.flip_h else 1)
 	elif abs(PlayerState.dash_direction.y) < 0.01:
 		# If doing a straight superdash
 		parent.body.velocity.y -= stats.superdash_straight_force.y
@@ -40,7 +40,7 @@ func enter() -> void:
 			else:
 				parent.body.velocity.x += stats.superdash_straight_force.x * sign(move_input)
 		else:
-			parent.body.velocity.x += stats.superdash_straight_force.x * (-1 if parent.animated_sprite.flip_h else 1)
+			parent.body.velocity.x += stats.superdash_straight_force.x * (-1 if parent.sprite.flip_h else 1)
 	
 	# Sets the jump cooldown timer
 	parent.timer_manager.set_timer("Jump cooldown", stats.jump_cooldown)

@@ -33,7 +33,7 @@ func enter() -> void:
 			else:
 				parent.body.velocity.x += stats.super_double_up_diagonal_force.x * sign(move_input)
 		else:
-			parent.body.velocity.x += stats.super_double_up_diagonal_force.x * (-1 if parent.animated_sprite.flip_h else 1)
+			parent.body.velocity.x += stats.super_double_up_diagonal_force.x * (-1 if parent.sprite.flip_h else 1)
 	elif abs(PlayerState.dash_direction.x) > 0.01 and abs(PlayerState.dash_direction.y) < 0.01:
 		# Super double jump straight
 		parent.body.velocity.y -= stats.super_double_straight_force.y
@@ -43,7 +43,7 @@ func enter() -> void:
 			else:
 				parent.body.velocity.x += stats.super_double_straight_force.x * sign(move_input)
 		else:
-			parent.body.velocity.x += stats.super_double_straight_force.x * (-1 if parent.animated_sprite.flip_h else 1)
+			parent.body.velocity.x += stats.super_double_straight_force.x * (-1 if parent.sprite.flip_h else 1)
 	elif abs(PlayerState.dash_direction.x) > 0.01 and PlayerState.dash_direction.y > 0.01:
 		# Super double jump down diagonally
 		parent.body.velocity.y -= stats.super_double_down_diagonal_force.y
@@ -53,7 +53,7 @@ func enter() -> void:
 			else:
 				parent.body.velocity.x += stats.super_double_down_diagonal_force.x * sign(move_input)
 		else:
-			parent.body.velocity.x += stats.super_double_down_diagonal_force.x * (-1 if parent.animated_sprite.flip_h else 1)
+			parent.body.velocity.x += stats.super_double_down_diagonal_force.x * (-1 if parent.sprite.flip_h else 1)
 	else:
 		# Cancel jump
 		parent.body.velocity.y -= stats.super_double_down_force.y

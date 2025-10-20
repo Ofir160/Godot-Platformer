@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfno3rgtrogmt"]
+[gd_scene load_steps=6 format=3 uid="uid://cfno3rgtrogmt"]
 
 [ext_resource type="Script" uid="uid://duepuxm5mqfjv" path="res://Scripts/State Machine/state_machine.gd" id="1_375tr"]
 [ext_resource type="Script" uid="uid://bcly1bsfynhkd" path="res://Scripts/Camera/camera.gd" id="1_f1cf7"]
 [ext_resource type="Script" uid="uid://cwd31rnx32kfy" path="res://Scripts/Camera/follow_state.gd" id="3_mhsga"]
+[ext_resource type="Resource" uid="uid://c62ddptoknlcx" path="res://Resources/camera_stats.tres" id="4_x3vey"]
 [ext_resource type="Script" uid="uid://b8hnx4oovl3ah" path="res://Scripts/Timer Manager/timer_manager.gd" id="4_xfji6"]
 
 [node name="Camera" type="Camera2D" node_paths=PackedStringArray("state_machine", "timer_manager")]
@@ -17,6 +18,7 @@ initial_state = NodePath("Follow State")
 
 [node name="Follow State" type="Node" parent="State Machine"]
 script = ExtResource("3_mhsga")
+stats = ExtResource("4_x3vey")
 
 [node name="Timer Manager" type="Node" parent="."]
 script = ExtResource("4_xfji6")

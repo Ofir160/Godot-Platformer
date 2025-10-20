@@ -25,9 +25,9 @@ func process_input() -> State:
 	
 	# Flips character depending on movement direction
 	if move_input > 0:
-		parent.animated_sprite.flip_h = false
+		parent.sprite.flip_h = false
 	elif move_input < 0:
-		parent.animated_sprite.flip_h = true
+		parent.sprite.flip_h = true
 		
 	if Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)

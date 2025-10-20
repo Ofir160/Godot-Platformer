@@ -189,12 +189,12 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body", "animated_sprite", "state_machine", "timer_manager")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body", "sprite", "state_machine", "timer_manager")]
 collision_layer = 2
 safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
-animated_sprite = NodePath("AnimatedSprite2D")
+sprite = NodePath("AnimatedSprite2D")
 state_machine = NodePath("State Machine")
 timer_manager = NodePath("Timer Manager")
 print_state_changes = true

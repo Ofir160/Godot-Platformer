@@ -17,7 +17,7 @@ func enter() -> void:
 	
 	# If the dash was done without moving set the direction to the way the character is facing
 	if abs(direction.x) < 0.01 and abs(direction.y) < 0.01:
-		direction.x = -1 if parent.animated_sprite.flip_h else 1
+		direction.x = -1 if parent.sprite.flip_h else 1
 		
 	# Sets the dash direction to the desired direction
 	PlayerState.dash_direction = direction
@@ -34,9 +34,9 @@ func process_input() -> State:
 		
 		# Flips character depending on movement direction
 		if new_direction.x > 0:
-			parent.animated_sprite.flip_h = false
+			parent.sprite.flip_h = false
 		elif new_direction.x < 0:
-			parent.animated_sprite.flip_h = true
+			parent.sprite.flip_h = true
 		
 		# Sets the dash direction to the desired direction
 		PlayerState.dash_direction = direction

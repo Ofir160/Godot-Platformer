@@ -21,9 +21,9 @@ func process_input() -> State:
 	
 	# Flips character depending on movement direction
 	if move_input > 0:
-		parent.animated_sprite.flip_h = false
+		parent.sprite.flip_h = false
 	elif move_input < 0:
-		parent.animated_sprite.flip_h = true
+		parent.sprite.flip_h = true
 	
 	# Checks if dashed
 	if is_dash_buffered() and dash_available():
