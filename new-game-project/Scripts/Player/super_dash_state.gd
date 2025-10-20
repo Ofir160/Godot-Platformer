@@ -48,6 +48,9 @@ func enter() -> void:
 	# Consumes the superdash
 	PlayerState.superdash_queued = false
 	
+	# Regain double jump
+	PlayerState.double_jump_available = true
+	
 func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()
 	return air_state

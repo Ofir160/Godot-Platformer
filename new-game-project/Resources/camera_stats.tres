@@ -6,5 +6,6 @@
 script = ExtResource("1_37pcq")
 x_damping_strength = 2.0
 y_damping_strength = 5.3
-bias_length = 150.0
+bias_length = 100.0
+bias_turnaround_time = 0.6
 metadata/_custom_type_script = "uid://b2q70u3eomxen"

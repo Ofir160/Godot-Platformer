@@ -89,6 +89,11 @@ func physics_update(delta : float) -> State:
 	
 	if PlayerState.superdash_queued and parent.timer_manager.query_timer("Super double jump delay"):
 		if not parent.body.is_on_floor() and not parent.body.is_on_wall():
+			
+			if parent.timer_manager.query_timer("Regain dash"):
+				# Refils dash if walled after the regain dash time
+				PlayerState.dashes_available = stats.dashes
+			
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			

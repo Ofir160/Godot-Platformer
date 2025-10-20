@@ -11,7 +11,8 @@ func enter() -> void:
 	
 	# Dampen previous velocity
 	
-	parent.body.velocity *= stats.dash_damping_mult
+	parent.body.velocity.x *= stats.dash_horizontal_damping
+	parent.body.velocity.y *= stats.dash_vertical_damping
 	
 	# Calculate the velocity and apply it
 	

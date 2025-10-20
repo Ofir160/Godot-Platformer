@@ -16,7 +16,7 @@ func update(delta : float) -> void:
 func set_timer(name : String, duration : float) -> void:
 	timers.set(name.to_upper(), duration)
 	
-## Checks if the timer is finished. Returns true if timer is finished or if it doesn't exist
+## Queries if the timer is finished. Returns true if timer is finished or if it doesn't exist
 func query_timer(name : String) -> bool:
 	if timers.has(name.to_upper()):
 		var time_left : float = timers.get(name.to_upper())
@@ -27,3 +27,10 @@ func query_timer(name : String) -> bool:
 			return false 
 	else:
 		return true
+		
+## Checks the time left on the timer. Returns 0 if the timer doesn't exist
+func check_timer(name : String) -> float:
+	if timers.has(name.to_upper()):
+		return timers.get(name.to_upper())
+	else:
+		return 0
