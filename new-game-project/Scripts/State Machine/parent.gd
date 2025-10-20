@@ -1,9 +1,8 @@
 extends Node
 class_name Parent
 
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var state_machine: StateMachine = $"State Machine"
-@onready var timer_manager: TimerManager = $"Timer Manager"
+@export var state_machine: StateMachine
+@export var timer_manager: TimerManager
 
 @export var print_state_changes : bool
 
