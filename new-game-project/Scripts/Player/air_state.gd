@@ -49,6 +49,10 @@ func process_input() -> State:
 		else:
 			parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
 	
+	# If a double jump is pressed during wall damping state
+	if PlayerState.double_jump_available and not parent.timer_manager.query_timer("Wall jump buffer"):
+		return double_jump_state
+	
 	return null
 
 func physics_update(delta : float) -> State:

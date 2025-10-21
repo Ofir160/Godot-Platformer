@@ -35,6 +35,7 @@ func process_input() -> State:
 	
 	# If jumped when not on a wall or floor
 	if Input.is_action_just_pressed("jump"):
+		print("Jump pressed whilst moving")
 		PlayerState.superdash_queued = true
 		
 		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)

@@ -97,6 +97,6 @@ func is_dash_direction_valid() -> bool:
 	# Stops the player dashing straight into the wall
 	var dashing_into_wall : bool = abs(move_input) > 0.01 and sign(move_input) == dir and not looking_up and not looking_down
 	# Stops the player dashing straight into the wall when not moving
-	var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.animated_sprite.flip_h else 1) == dir and not looking_down and not looking_up
+	var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.sprite.flip_h else 1) == dir and not looking_down and not looking_up
 		
 	return not dashing_into_wall and not idle_dashing_into_wall

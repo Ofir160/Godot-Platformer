@@ -72,7 +72,6 @@ func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()
 	return null
 	
-# If you 
 func is_jump_buffered() -> bool:
 	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
 

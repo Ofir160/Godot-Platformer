@@ -43,8 +43,15 @@ func process_input() -> State:
 		
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
+		print("Jump pressed when starting")
 		
 		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
+	
+	if not parent.timer_manager.query_timer("Wall jump buffer"):
+		PlayerState.superdash_queued = true
+		print("Jump pressed before dash")
+		
+		parent.timer_manager.set_timer("Super double jump delay", stats.dash_time)
 	
 	return null
 	

@@ -176,7 +176,6 @@ sources/0 = SubResource("TileSetAtlasSource_wrm1d")
 [node name="Player" parent="." instance=ExtResource("1_ebmjs")]
 z_index = 10
 position = Vector2(1, 0)
-print_state_changes = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(-1, 156)
