@@ -28,6 +28,13 @@ func process_input() -> State:
 	# Gets the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
+	# Check if a jump is buffered
+	if is_jump_buffered() and is_wall_jump_available():
+		if not parent.timer_manager.query_timer("Late superdash"):
+			return super_dash_wall_state
+		else:
+			return wall_jump_state
+	
 	# Checks if the player dashed
 	if is_dash_buffered() and dash_available() and is_dash_direction_valid():
 		return dash_start_state
@@ -38,13 +45,6 @@ func process_input() -> State:
 	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
 		PlayerState.superdash_queued = false
 		return super_dash_wall_state
-	
-	# Check if a jump is buffered
-	if is_jump_buffered() and is_wall_jump_available():
-		if not parent.timer_manager.query_timer("Late superdash"):
-			return super_dash_wall_state
-		else:
-			return wall_jump_state
 		
 	return null
 

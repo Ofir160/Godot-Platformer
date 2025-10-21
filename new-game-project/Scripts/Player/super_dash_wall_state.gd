@@ -16,8 +16,8 @@ func enter() -> void:
 	# Dampens vertical momentum
 	parent.body.velocity.y *= stats.superdash_vertical_damping
 	
-	# Gets the player's movement direction
-	var move_input : float = Input.get_axis("move_left", "move_right")
+	# Cancels horizontal momentum
+	parent.body.velocity.x = 0
 	
 	if abs(PlayerState.dash_direction.y) > 0.01 and abs(PlayerState.dash_direction.x) < 0.01:
 		# If doing an up superdash

@@ -42,7 +42,6 @@ func process_input() -> State:
 		PlayerState.dash_direction = direction
 		
 	if Input.is_action_just_pressed("jump"):
-		print("Ya")
 		PlayerState.superdash_queued = true
 		
 		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
