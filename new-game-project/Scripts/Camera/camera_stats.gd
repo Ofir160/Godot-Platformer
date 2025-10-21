@@ -11,3 +11,6 @@ extends Resource
 @export_category("Bias")
 @export var bias_length : float = 75
 @export var bias_turnaround_time : float = 0.4
+
+@export_category("Lookahead")
+@export var lookahead_time : float = 0.05

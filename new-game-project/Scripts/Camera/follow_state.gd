@@ -21,7 +21,6 @@ func enter() -> void:
 	offset = stats.bias_length * (-1 if looking_left else 1)
 	player_falling = parent.player.body.velocity.y > stats.y_damping_change_velocity_threshold
 	y_damping_strength = stats.y_damping_strength_down if player_falling else stats.y_damping_strength_up
-	print(y_damping_strength)
 	
 	starting_offset = offset
 	desired_offset = stats.bias_length * (-1 if looking_left else 1)
@@ -58,10 +57,13 @@ func physics_update(delta : float) -> State:
 	# Calculate the lerped y damping
 	if time_left_y_damping > 0:
 		var t = (stats.y_damping_change_time - time_left_y_damping) / stats.y_damping_change_time
-		y_damping_strength = lerp(starting_y_damping_strength, desired_y_damping_strength, t)
+		y_damping_strength = lerp(starting_y_damping_strength, desired_y_damping_strength, 1 - (1 - t) * (1 - t) )
+	
+	var new_player_position_x = parent.player.position.x + parent.player.velocity.x * stats.lookahead_time
+	
 	
 	# Calculate the new position on the x axis by lerp smoothing to the player with bias
-	new_x_position = lerp(parent.position.x, parent.player.position.x + offset, 1 - exp(-delta * stats.x_damping_strength))
+	new_x_position = lerp(parent.position.x, new_player_position_x + offset, 1 - exp(-delta * stats.x_damping_strength))
 	new_y_position = lerp(parent.position.y, parent.player.position.y, 1 - exp(-delta * y_damping_strength))
 	
 	parent.position = Vector2(new_x_position, new_y_position)

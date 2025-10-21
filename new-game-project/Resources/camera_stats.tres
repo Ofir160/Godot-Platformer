@@ -6,9 +6,10 @@
 script = ExtResource("1_37pcq")
 x_damping_strength = 2.0
 y_damping_strength_up = 5.3
-y_damping_strength_down = 15.0
-y_damping_change_time = 0.5
-y_damping_change_velocity_threshold = 300.0
+y_damping_strength_down = 25.0
+y_damping_change_time = 1.5
+y_damping_change_velocity_threshold = 725.0
 bias_length = 100.0
 bias_turnaround_time = 0.6
+lookahead_time = 0.05
 metadata/_custom_type_script = "uid://b2q70u3eomxen"

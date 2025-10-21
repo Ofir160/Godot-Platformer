@@ -41,7 +41,6 @@ func enter() -> void:
 func process_input() -> State:
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
-		print("Jump pressed whilst started moving")
 		
 		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
 	
