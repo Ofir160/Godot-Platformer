@@ -57,7 +57,7 @@ func physics_update(delta : float) -> State:
 	# Calculate the lerped y damping
 	if time_left_y_damping > 0:
 		var t = (stats.y_damping_change_time - time_left_y_damping) / stats.y_damping_change_time
-		y_damping_strength = lerp(starting_y_damping_strength, desired_y_damping_strength, 1 - (1 - t) * (1 - t) )
+		y_damping_strength = lerp(starting_y_damping_strength, desired_y_damping_strength, t )
 	
 	var new_player_position_x = parent.player.position.x + parent.player.velocity.x * stats.lookahead_time
 	
