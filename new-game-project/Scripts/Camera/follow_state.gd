@@ -47,6 +47,7 @@ func physics_update(delta : float) -> State:
 	
 	# If the player is now falling lerp the damping strength
 	if player_falling != new_player_falling:
+		print("Started y damping")
 		player_falling = new_player_falling
 		parent.timer_manager.set_timer("Y Damping lerp", stats.y_damping_change_time)
 		starting_y_damping_strength = y_damping_strength

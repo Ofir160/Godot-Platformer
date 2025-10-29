@@ -10,6 +10,8 @@ static var dashes_available : int
 static var dash_direction : Vector2
 static var superdash_queued : bool
 
+static var saved_dash_speed : float
+
 func enter() -> void:
 	super()
 	parent.sprite.play(animation_name)

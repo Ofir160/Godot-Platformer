@@ -77,8 +77,14 @@ var regain_dash_time : float:
 @export var superdash_vertical_damping : float = 0.9
 @export var superdash_down_force : Vector2 = Vector2(1000, 450)
 @export var superdash_straight_force : Vector2 = Vector2(800, 600)
+
+@export_category("Superdash wall Stats")
+@export var superdash_wall_straight_conversion_mult : float = 0.7
+@export var superdash_wall_diagonal_up_conversion_mult : float = 0.3
+@export var superdash_wall_diagonal_down_conversion_mult : float = 0.3
 @export var superdash_wall_up_force : Vector2 = Vector2(200, 750)
-@export var superdash_wall_diagonal_force : Vector2 = Vector2(450, 600)
+@export var superdash_wall_diagonal_up_force : Vector2 = Vector2(450, 600)
+@export var superdash_wall_diagonal_down_force : Vector2 = Vector2(450, 600)
 @export var superdash_wall_straight_force : Vector2 = Vector2(600, 600)
 
 @export_category("Super Double Jump")

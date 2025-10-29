@@ -23,14 +23,18 @@ func enter() -> void:
 		# If doing an up superdash
 		parent.body.velocity.y -= stats.superdash_wall_up_force.y
 		parent.body.velocity.x += stats.superdash_wall_up_force.x * -dir
-	elif abs(PlayerState.dash_direction.y) > 0.01:
-		# If doing a diagonal superdash
-		parent.body.velocity.y -= stats.superdash_wall_diagonal_force.y
-		parent.body.velocity.x += stats.superdash_wall_diagonal_force.x * -dir
+	elif PlayerState.dash_direction.y < -0.01:
+		# If doing an up diagonal superdash
+		parent.body.velocity.y -= (stats.superdash_wall_diagonal_up_force.y + PlayerState.saved_dash_speed * stats.superdash_wall_diagonal_up_conversion_mult)
+		parent.body.velocity.x += stats.superdash_wall_diagonal_up_force.x * -dir
+	elif PlayerState.dash_direction.y > 0.01:
+		# If doing a down diagonal superdash
+		parent.body.velocity.y -= stats.superdash_wall_diagonal_down_force.y + PlayerState.saved_dash_speed * stats.superdash_wall_diagonal_down_conversion_mult
+		parent.body.velocity.x += (stats.superdash_wall_diagonal_down_force.x + PlayerState.saved_dash_speed * stats.superdash_wall_diagonal_down_conversion_mult) * -dir
 	else:
 		# If doing a straight superdash
 		parent.body.velocity.y -= stats.superdash_wall_straight_force.y
-		parent.body.velocity.x += stats.superdash_wall_straight_force.x * -dir
+		parent.body.velocity.x += (stats.superdash_wall_straight_force.x + PlayerState.saved_dash_speed * stats.superdash_wall_straight_conversion_mult) * -dir
 	
 	# Sets the jump cooldown timer
 	parent.timer_manager.set_timer("Wall jump cooldown", stats.jump_cooldown)

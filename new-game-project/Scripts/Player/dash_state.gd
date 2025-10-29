@@ -9,6 +9,10 @@ func enter() -> void:
 	# Reduced the amount of dashes available
 	PlayerState.dashes_available -= 1
 	
+	# Save velocity
+	
+	PlayerState.saved_dash_speed = abs(parent.body.velocity.x)
+	
 	# Dampen previous velocity
 	
 	parent.body.velocity.x *= stats.dash_horizontal_damping
