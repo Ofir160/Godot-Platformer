@@ -7,6 +7,7 @@ class_name SlideState
 @export var wall_jump_state : PlayerState
 @export var dash_start_state : PlayerState
 @export var super_dash_wall_state : PlayerState
+@export var attack_start_state : PlayerState
 
 var move_input : float
 var dir : float
@@ -28,23 +29,27 @@ func process_input() -> State:
 	# Gets the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
-	# Check if a jump is buffered
-	if is_jump_buffered() and is_wall_jump_available():
-		if not parent.timer_manager.query_timer("Late superdash"):
-			return super_dash_wall_state
-		else:
-			return wall_jump_state
-	
 	# Checks if the player dashed
 	if is_dash_buffered() and dash_available() and is_dash_direction_valid():
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
+	# If the player tried to attack
+	if Input.is_action_just_pressed("attack"):
+		return attack_start_state
+	
 	# Checks if a super dash is queued
 	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
 		PlayerState.superdash_queued = false
 		return super_dash_wall_state
+		
+	# Check if a jump is buffered
+	if is_jump_buffered() and is_wall_jump_available():
+		if not parent.timer_manager.query_timer("Late superdash"):
+			return super_dash_wall_state
+		else:
+			return wall_jump_state
 		
 	return null
 

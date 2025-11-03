@@ -14,9 +14,9 @@ extends Resource
 @export_category("Jump Stats")
 @export var jump_force : float = 600
 @export var coyote_time : float = 0.1
-@export var jump_buffer_time : float = 0.1
+@export var jump_buffer_time : float = 0.2
 @export var jump_cooldown : float = 0.5
-@export var jump_velocity_damping : float = 0.2
+@export var jump_velocity_damping : float = 0.6
 @export var jump_hang_time_threshold : float = 50
 @export var jump_apex_acceleration_mult : float = 1.2
 @export var jump_apex_speed_mult : float = 1.1
@@ -35,7 +35,7 @@ extends Resource
 @export_category("Wall Stats")
 @export var slide_speed : float = 350
 @export var slide_acceleration : float = 4.0
-@export var wall_jump_cooldown : float = 0.4
+@export var wall_jump_cooldown : float = 0.3
 @export var wall_jump_buffer_time : float = 0.2
 @export var wall_jump_up_velocity_threshold : float = 200
 @export var wall_jump_velocity_damping : float = 0.2
@@ -48,16 +48,16 @@ extends Resource
 
 @export_category("Dash Stats")
 @export var dashes : int = 1
-@export var dash_cooldown : float = 0.25
-@export var dash_buffer_time : float = 0.1
+@export var dash_cooldown : float = 0.1
+@export var dash_buffer_time : float = 0.2
 @export var dash_length : float = 150
 @export var dash_time : float = 0.2
-@export var dash_frozen_percent : float = 0.2
-@export var dash_regain_percent : float = 0.6
+@export var dash_frozen_percent : float = 0.1
+@export var dash_regain_percent : float = 0.2
 @export var dash_vertical_damping : float = 0.5
 @export var dash_horizontal_damping : float = 0.7
 @export var dash_upwards_mult : float = 0.55
-@export var dash_downwards_mult : float = 1.1
+@export var dash_downwards_mult : float = 1.3
 @export var dash_horizontal_mult : float = 0.6
 
 var frozen_dash_time : float:
@@ -71,28 +71,41 @@ var regain_dash_time : float:
 		return interruptable_dash_time * dash_regain_percent
 
 @export_category("Superdash Stats")
-@export var late_superdash_time : float = 0.2
-@export var superdash_neck_snap_mult : float = 1.5
-@export var superdash_horizontal_damping : float = 0.3
-@export var superdash_vertical_damping : float = 0.9
+@export var late_superdash_time : float = 0.17
+@export var superdash_neck_snap_mult : float = 1.1
+@export var superdash_horizontal_damping : float = 0.4
+@export var superdash_vertical_damping : float = 0.3
 @export var superdash_down_force : Vector2 = Vector2(1000, 450)
 @export var superdash_straight_force : Vector2 = Vector2(800, 600)
 
 @export_category("Superdash wall Stats")
 @export var superdash_wall_straight_conversion_mult : float = 0.7
-@export var superdash_wall_diagonal_up_conversion_mult : float = 0.3
-@export var superdash_wall_diagonal_down_conversion_mult : float = 0.3
-@export var superdash_wall_up_force : Vector2 = Vector2(200, 750)
-@export var superdash_wall_diagonal_up_force : Vector2 = Vector2(450, 600)
-@export var superdash_wall_diagonal_down_force : Vector2 = Vector2(450, 600)
-@export var superdash_wall_straight_force : Vector2 = Vector2(600, 600)
+@export var superdash_wall_diagonal_up_conversion_mult : float = 0.2
+@export var superdash_wall_diagonal_down_conversion_mult : float = 0.2
+@export var superdash_wall_up_force : Vector2 = Vector2(400, 700)
+@export var superdash_wall_diagonal_up_force : Vector2 = Vector2(450, 550)
+@export var superdash_wall_diagonal_down_force : Vector2 = Vector2(500, 500)
+@export var superdash_wall_straight_force : Vector2 = Vector2(400, 375)
 
-@export_category("Super Double Jump")
-@export var super_double_jump_delay : float = 0.2
-@export var super_double_jump_horizontal_damping : float = 0.4
-@export var super_double_jump_vertical_damping : float = 0.2
-@export var super_double_up_force : Vector2 = Vector2(0, 400)
-@export var super_double_up_diagonal_force : Vector2 = Vector2(400, 400)
-@export var super_double_straight_force : Vector2 = Vector2(700, 500)
-@export var super_double_down_diagonal_force : Vector2 = Vector2(800, 500)
+@export_category("Super Double Jump Stats")
+@export var super_double_jump_delay : float = 0.165
+@export var super_double_jump_horizontal_damping : float = 0.3
+@export var super_double_jump_vertical_damping : float = 0.1
+@export var super_double_up_force : Vector2 = Vector2(0, 600)
+@export var super_double_up_diagonal_force : Vector2 = Vector2(600, 500)
+@export var super_double_straight_force : Vector2 = Vector2(800, 500)
+@export var super_double_down_diagonal_force : Vector2 = Vector2(800, 450)
 @export var super_double_down_force : Vector2 = Vector2(0, 600)
+
+@export_category("Attack stats")
+@export var attack_time : float = 0.5
+@export var attack_frozen_percent : float = 0.2
+@export var attack_velocity_damping : float = 0.1
+
+var frozen_attack_time : float:
+	get:
+		return attack_time * attack_frozen_percent
+		
+var interruptable_attack_time : float:
+	get:
+		return attack_time * (1- attack_frozen_percent)

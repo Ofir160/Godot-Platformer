@@ -10,6 +10,7 @@ class_name DashInterruptableState
 @export var super_dash_state : PlayerState
 @export var super_dash_wall_state : PlayerState
 @export var super_double_jump_state : PlayerState
+@export var attack_start_state : PlayerState
 
 var time_started : float
 var time_floored : float

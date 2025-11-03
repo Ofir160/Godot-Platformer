@@ -9,6 +9,7 @@ class_name AirState
 @export var double_jump_state : PlayerState
 @export var super_double_jump_state : PlayerState
 @export var dash_interruptable_state : PlayerState
+@export var attack_start_state : PlayerState
 
 var accel_rate : float
 var move_input : float
@@ -31,6 +32,10 @@ func process_input() -> State:
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
+	
+	# If the player tried to attack
+	if Input.is_action_just_pressed("attack"):
+		return attack_start_state
 	
 	# Checks if a super dash is queued and it should be used as a super double jump
 	if PlayerState.superdash_queued and PlayerState.double_jump_available and parent.timer_manager.query_timer("Super double jump delay") and previous_state == dash_interruptable_state:
@@ -59,7 +64,7 @@ func physics_update(delta : float) -> State:
 	# If on the floor
 	if parent.body.is_on_floor():
 		# If moving when reached the floor go to move state
-		if abs(move_input) > 0.01:
+		if abs(parent.body.velocity.x) > 0.01:
 			return move_state
 		else:
 			return idle_state

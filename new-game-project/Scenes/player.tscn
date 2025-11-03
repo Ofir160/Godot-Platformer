@@ -1,25 +1,27 @@
-[gd_scene load_steps=44 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=46 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
 [ext_resource type="Script" uid="uid://duepuxm5mqfjv" path="res://Scripts/State Machine/state_machine.gd" id="3_6t5aa"]
-[ext_resource type="Script" uid="uid://2dt8hc1h5tjg" path="res://Scripts/Player/idle_state.gd" id="4_vgqql"]
+[ext_resource type="Script" uid="uid://2dt8hc1h5tjg" path="res://Scripts/Player/Base Movement/idle_state.gd" id="4_vgqql"]
 [ext_resource type="Resource" uid="uid://1j6v8uf7x60g" path="res://Resources/player_stats.tres" id="5_f1ek2"]
-[ext_resource type="Script" uid="uid://l44rtesrscxa" path="res://Scripts/Player/move_state.gd" id="5_fkybt"]
-[ext_resource type="Script" uid="uid://cvxo4fgevxljb" path="res://Scripts/Player/jump_state.gd" id="6_x3wgy"]
-[ext_resource type="Script" uid="uid://dtoqqgpk4og06" path="res://Scripts/Player/air_state.gd" id="7_3smsa"]
-[ext_resource type="Script" uid="uid://bx3tb7gsdrbw6" path="res://Scripts/Player/coyote_state.gd" id="8_8erm5"]
-[ext_resource type="Script" uid="uid://b0r4i1yxcoged" path="res://Scripts/Player/slide_state.gd" id="10_tx1dd"]
-[ext_resource type="Script" uid="uid://b17us7cm0j12m" path="res://Scripts/Player/wall_jump_state.gd" id="11_gymyn"]
-[ext_resource type="Script" uid="uid://b1buysd8ia2ph" path="res://Scripts/Player/wall_jump_damping_state.gd" id="12_pu2lt"]
-[ext_resource type="Script" uid="uid://orot5t7221k3" path="res://Scripts/Player/dash_state.gd" id="13_ukyrk"]
-[ext_resource type="Script" uid="uid://c1hl1ixb3fdxl" path="res://Scripts/Player/dash_interruptable_state.gd" id="14_7dp3o"]
-[ext_resource type="Script" uid="uid://cplwl2nyn0vqj" path="res://Scripts/Player/dash_start_state.gd" id="15_h4iuc"]
-[ext_resource type="Script" uid="uid://beww8nna4vm1o" path="res://Scripts/Player/super_dash_state.gd" id="16_fd4e3"]
-[ext_resource type="Script" uid="uid://b7mnmufcy5ww1" path="res://Scripts/Player/double_jump_state.gd" id="17_qqcod"]
-[ext_resource type="Script" uid="uid://c0dldphyotaa1" path="res://Scripts/Player/super_double_jump_state.gd" id="18_igrcy"]
-[ext_resource type="Script" uid="uid://c3pwrogdugptq" path="res://Scripts/Player/super_dash_wall_state.gd" id="19_fs7ks"]
+[ext_resource type="Script" uid="uid://l44rtesrscxa" path="res://Scripts/Player/Base Movement/move_state.gd" id="5_fkybt"]
+[ext_resource type="Script" uid="uid://cvxo4fgevxljb" path="res://Scripts/Player/Base Movement/jump_state.gd" id="6_x3wgy"]
+[ext_resource type="Script" uid="uid://dtoqqgpk4og06" path="res://Scripts/Player/Base Movement/air_state.gd" id="7_3smsa"]
+[ext_resource type="Script" uid="uid://bx3tb7gsdrbw6" path="res://Scripts/Player/Base Movement/coyote_state.gd" id="8_8erm5"]
+[ext_resource type="Script" uid="uid://b0r4i1yxcoged" path="res://Scripts/Player/Wall/slide_state.gd" id="10_tx1dd"]
+[ext_resource type="Script" uid="uid://b17us7cm0j12m" path="res://Scripts/Player/Wall/wall_jump_state.gd" id="11_gymyn"]
+[ext_resource type="Script" uid="uid://b1buysd8ia2ph" path="res://Scripts/Player/Wall/wall_jump_damping_state.gd" id="12_pu2lt"]
+[ext_resource type="Script" uid="uid://orot5t7221k3" path="res://Scripts/Player/Dash/dash_state.gd" id="13_ukyrk"]
+[ext_resource type="Script" uid="uid://c1hl1ixb3fdxl" path="res://Scripts/Player/Dash/dash_interruptable_state.gd" id="14_7dp3o"]
+[ext_resource type="Script" uid="uid://cplwl2nyn0vqj" path="res://Scripts/Player/Dash/dash_start_state.gd" id="15_h4iuc"]
+[ext_resource type="Script" uid="uid://beww8nna4vm1o" path="res://Scripts/Player/Superdash/super_dash_state.gd" id="16_fd4e3"]
+[ext_resource type="Script" uid="uid://b7mnmufcy5ww1" path="res://Scripts/Player/Base Movement/double_jump_state.gd" id="17_qqcod"]
+[ext_resource type="Script" uid="uid://c0dldphyotaa1" path="res://Scripts/Player/Superdash/super_double_jump_state.gd" id="18_igrcy"]
+[ext_resource type="Script" uid="uid://c3pwrogdugptq" path="res://Scripts/Player/Superdash/super_dash_wall_state.gd" id="19_fs7ks"]
 [ext_resource type="Script" uid="uid://b8hnx4oovl3ah" path="res://Scripts/Timer Manager/timer_manager.gd" id="20_l6n3p"]
+[ext_resource type="Script" uid="uid://g01x8dsfsy7u" path="res://Scripts/Player/Attack/attack_start_state.gd" id="20_wpjfl"]
+[ext_resource type="Script" uid="uid://xnb8bm8xurhv" path="res://Scripts/Player/Attack/attack_state.gd" id="21_bi64h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
 size = Vector2(40, 64)
@@ -214,7 +216,7 @@ frame_progress = 0.229842
 script = ExtResource("3_6t5aa")
 initial_state = NodePath("Air State")
 
-[node name="Idle State" type="Node" parent="State Machine" node_paths=PackedStringArray("jump_state", "move_state", "air_state", "dash_start_state", "slide_state", "super_dash_state")]
+[node name="Idle State" type="Node" parent="State Machine" node_paths=PackedStringArray("jump_state", "move_state", "air_state", "dash_start_state", "slide_state", "super_dash_state", "attack_start_state")]
 script = ExtResource("4_vgqql")
 jump_state = NodePath("../Jump State")
 move_state = NodePath("../Move State")
@@ -222,16 +224,18 @@ air_state = NodePath("../Air State")
 dash_start_state = NodePath("../Dash Start State")
 slide_state = NodePath("../Slide State")
 super_dash_state = NodePath("../Super Dash State")
+attack_start_state = NodePath("../Attack Start State")
 animation_name = "Idle"
 stats = ExtResource("5_f1ek2")
 
-[node name="Move State" type="Node" parent="State Machine" node_paths=PackedStringArray("idle_state", "jump_state", "coyote_state", "dash_start_state", "super_dash_state")]
+[node name="Move State" type="Node" parent="State Machine" node_paths=PackedStringArray("idle_state", "jump_state", "coyote_state", "dash_start_state", "super_dash_state", "attack_start_state")]
 script = ExtResource("5_fkybt")
 idle_state = NodePath("../Idle State")
 jump_state = NodePath("../Jump State")
 coyote_state = NodePath("../Coyote State")
 dash_start_state = NodePath("../Dash Start State")
 super_dash_state = NodePath("../Super Dash State")
+attack_start_state = NodePath("../Attack Start State")
 animation_name = "Move"
 stats = ExtResource("5_f1ek2")
 
@@ -247,7 +251,7 @@ script = ExtResource("17_qqcod")
 air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
 
-[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_start_state", "double_jump_state", "super_double_jump_state", "dash_interruptable_state")]
+[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_start_state", "double_jump_state", "super_double_jump_state", "dash_interruptable_state", "attack_start_state")]
 script = ExtResource("7_3smsa")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
@@ -257,19 +261,21 @@ dash_start_state = NodePath("../Dash Start State")
 double_jump_state = NodePath("../Double Jump State")
 super_double_jump_state = NodePath("../Super Double Jump State")
 dash_interruptable_state = NodePath("../Dash Interruptable State")
+attack_start_state = NodePath("../Attack Start State")
 animation_name = "Move"
 stats = ExtResource("5_f1ek2")
 
-[node name="Coyote State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "jump_state", "dash_start_state", "super_dash_state")]
+[node name="Coyote State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "jump_state", "dash_start_state", "super_dash_state", "attack_start_state")]
 script = ExtResource("8_8erm5")
 air_state = NodePath("../Air State")
 jump_state = NodePath("../Jump State")
 dash_start_state = NodePath("../Dash Start State")
 super_dash_state = NodePath("../Super Dash State")
+attack_start_state = NodePath("../Attack Start State")
 animation_name = "Move"
 stats = ExtResource("5_f1ek2")
 
-[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state", "wall_jump_state", "dash_start_state", "super_dash_wall_state")]
+[node name="Slide State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "air_state", "wall_jump_state", "dash_start_state", "super_dash_wall_state", "attack_start_state")]
 script = ExtResource("10_tx1dd")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
@@ -277,6 +283,7 @@ air_state = NodePath("../Air State")
 wall_jump_state = NodePath("../Wall Jump State")
 dash_start_state = NodePath("../Dash Start State")
 super_dash_wall_state = NodePath("../Super Dash Wall State")
+attack_start_state = NodePath("../Attack Start State")
 animation_name = "Jump"
 stats = ExtResource("5_f1ek2")
 
@@ -297,7 +304,7 @@ dash_interruptable_state = NodePath("../Dash Interruptable State")
 animation_name = "Jump"
 stats = ExtResource("5_f1ek2")
 
-[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state", "super_dash_state", "super_dash_wall_state", "super_double_jump_state")]
+[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state", "super_dash_state", "super_dash_wall_state", "super_double_jump_state", "attack_start_state")]
 script = ExtResource("14_7dp3o")
 air_state = NodePath("../Air State")
 move_state = NodePath("../Move State")
@@ -308,6 +315,7 @@ wall_jump_state = NodePath("../Wall Jump State")
 super_dash_state = NodePath("../Super Dash State")
 super_dash_wall_state = NodePath("../Super Dash Wall State")
 super_double_jump_state = NodePath("../Super Double Jump State")
+attack_start_state = NodePath("../Attack Start State")
 animation_name = "Jump"
 stats = ExtResource("5_f1ek2")
 
@@ -329,6 +337,18 @@ stats = ExtResource("5_f1ek2")
 [node name="Super Dash Wall State" type="Node" parent="State Machine" node_paths=PackedStringArray("wall_jump_damping_state")]
 script = ExtResource("19_fs7ks")
 wall_jump_damping_state = NodePath("../Wall Jump Damping State")
+stats = ExtResource("5_f1ek2")
+
+[node name="Attack Start State" type="Node" parent="State Machine" node_paths=PackedStringArray("attack_state")]
+script = ExtResource("20_wpjfl")
+attack_state = NodePath("../Attack State")
+stats = ExtResource("5_f1ek2")
+
+[node name="Attack State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "slide_state")]
+script = ExtResource("21_bi64h")
+air_state = NodePath("../Air State")
+move_state = NodePath("../Move State")
+slide_state = NodePath("../Slide State")
 stats = ExtResource("5_f1ek2")
 
 [node name="Timer Manager" type="Node" parent="."]

@@ -6,11 +6,13 @@ extends State
 
 static var double_jump_available : bool
 
-static var dashes_available : int
 static var dash_direction : Vector2
+static var saved_dash_speed : float
+static var dashes_available : int
 static var superdash_queued : bool
 
-static var saved_dash_speed : float
+static var attack_direction : Vector2
+static var saved_attack_speed : Vector2
 
 func enter() -> void:
 	super()
