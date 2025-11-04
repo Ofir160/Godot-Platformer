@@ -24,7 +24,10 @@ func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()
 	
 	if parent.timer_manager.query_timer("Attack"):
+		# Hide the attack visuals
 		parent.attack.retract()
+		
+		parent.body.velocity = PlayerState.saved_attack_speed * stats.attack_velocity_end_damping
 		
 		# End attack
 		if parent.body.is_on_wall():

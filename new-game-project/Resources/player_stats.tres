@@ -76,5 +76,6 @@ super_double_down_diagonal_force = Vector2(800, 450)
 super_double_down_force = Vector2(0, 600)
 attack_time = 0.2
 attack_frozen_percent = 0.2
-attack_velocity_damping = 0.1
+attack_velocity_damping = 0.3
+attack_velocity_end_damping = 0.8
 metadata/_custom_type_script = "uid://dp1x7x3glbxeh"
