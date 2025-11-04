@@ -24,9 +24,9 @@ func enter() -> void:
 	if previous_state == slide_state:
 		on_wall = true
 	else:
-		on_wall = parent.body.is_on_wall()
+		on_wall = parent.collision.is_on_wall(true)
 	if on_wall:
-		dir = -sign(parent.body.get_wall_normal().x)
+		dir = -sign(parent.collision.get_wall_side())
 	
 	# Refill double jump
 	PlayerState.double_jump_available = true
@@ -63,7 +63,7 @@ func process_input() -> State:
 
 func physics_update(delta : float) -> State:
 	# Checks if the player becomes in the air
-	if not parent.body.is_on_floor():
+	if not parent.collision.is_on_floor(true):
 		return air_state
 	
 	# Check if moving
@@ -81,7 +81,7 @@ func is_jump_buffered() -> bool:
 	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
 
 func is_jump_available() -> bool:
-	return parent.timer_manager.query_timer("Jump cooldown") and parent.body.is_on_floor()
+	return parent.timer_manager.query_timer("Jump cooldown") and parent.collision.is_on_floor(false)
 
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")

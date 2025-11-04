@@ -8,7 +8,7 @@ var move_input : float
 func enter() -> void:
 	super()
 	
-	var dir : float = -sign(parent.body.get_wall_normal().x)
+	var dir : float = -sign(parent.collision.get_wall_side())
 	
 	# Dampens upwards momentum
 	parent.body.velocity.y = min(parent.body.velocity.y * stats.wall_jump_velocity_damping, 0)

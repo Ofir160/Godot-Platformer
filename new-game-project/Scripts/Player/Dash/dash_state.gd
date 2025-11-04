@@ -43,10 +43,8 @@ func enter() -> void:
 		parent.body.velocity.x = 0
 	
 func process_input() -> State:
-	
 	if Input.is_action_just_pressed("attack"):
 		PlayerState.dash_attack_queued = true
-		print("Yo")
 	
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true

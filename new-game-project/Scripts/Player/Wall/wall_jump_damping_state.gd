@@ -17,7 +17,7 @@ func enter() -> void:
 	parent.timer_manager.set_timer("Wall jump damping", stats.wall_jump_damping_time)
 	
 	# Saves the direction of the wall
-	dir = -sign(parent.body.get_wall_normal().x)
+	dir = -sign(parent.collision.get_wall_side())
 	
 func process_input() -> State:
 	# Gets the player's movement direction

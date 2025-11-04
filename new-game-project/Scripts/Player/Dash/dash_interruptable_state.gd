@@ -51,53 +51,60 @@ func process_input() -> State:
 	return null
 	
 func physics_update(delta : float) -> State:
-	
-	if parent.body.is_on_floor():
-		if abs(parent.body.velocity.x) < 0.01 and parent.body.velocity.y >= 0:
-			# Sets the dash cooldown timer
-			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
-			
-			# Sets the late superdash timer
-			parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
-			
-			return move_state
-		elif parent.timer_manager.query_timer("Regain dash"):
+	# If close to the ground
+	if parent.collision.is_on_floor(false):
+		if parent.timer_manager.query_timer("Regain dash"):
 			# Refils dash if grounded after the regain dash time
 			PlayerState.dashes_available = stats.dashes
-		if PlayerState.superdash_queued:
+		elif PlayerState.superdash_queued:
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			if PlayerState.dash_direction.y >= 0:
 				return super_dash_state
+		
+	# If on the ground and not moving
+	if abs(parent.body.velocity.x) < 0.01 and parent.body.velocity.y >= 0 and parent.collision.is_on_floor(true):
+		# Sets the dash cooldown timer
+		parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+			
+		# Sets the late superdash timer
+		parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
+			
+		return move_state
 	
-	if parent.body.is_on_wall():
-		if abs(parent.body.velocity.y) < 0.01:
-			# Sets the dash cooldown timer
-			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
-			
-			# Sets the late superdash timer
-			parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
-			
-			return slide_state
-		elif parent.timer_manager.query_timer("Regain dash"):
+	# If close to the wall
+	if parent.collision.is_on_wall(false):
+		if parent.timer_manager.query_timer("Regain dash"):
 			# Refils dash if walled after the regain dash time
 			PlayerState.dashes_available = stats.dashes
-		if PlayerState.superdash_queued:
+		elif PlayerState.superdash_queued:
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			return super_dash_wall_state
 	
-	if parent.body.is_on_ceiling():
+	# If on the wall and not moving
+	if abs(parent.body.velocity.y) < 0.01 and parent.collision.is_on_wall(true):
+		# Sets the dash cooldown timer
+		parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
+		
+		# Sets the late superdash timer
+		parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
+		
+		return slide_state
+	
+	# If touching the ceiling
+	if parent.collision.is_on_ceiling(true):
 		if abs(parent.body.velocity.x) < 0.01:
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			return air_state
 	
+	# If super double jumping
 	if PlayerState.superdash_queued and parent.timer_manager.query_timer("Super double jump delay"):
-		if not parent.body.is_on_floor() and not parent.body.is_on_wall():
+		if not parent.collision.is_on_floor(false) and not parent.collision.is_on_wall(false):
 			
 			if parent.timer_manager.query_timer("Regain dash"):
 				# Refils dash if walled after the regain dash time
@@ -118,7 +125,7 @@ func physics_update(delta : float) -> State:
 		parent.timer_manager.set_timer("Late superdash", stats.late_superdash_time)
 		
 		# If ended dash on the floor go to move state
-		if parent.body.is_on_floor():
+		if parent.collision.is_on_floor(true):
 			return move_state
 		else:
 			if PlayerState.dash_direction.y < 0.01:
@@ -130,7 +137,7 @@ func physics_update(delta : float) -> State:
 			elif abs(PlayerState.dash_direction.y) < 0.01:
 				# If ended dash moving horizontally decrease speed
 				parent.body.velocity.x *= stats.dash_horizontal_mult
-			if parent.body.is_on_wall():
+			if parent.collision.is_on_wall(false):
 				return slide_state
 			else:
 				return air_state

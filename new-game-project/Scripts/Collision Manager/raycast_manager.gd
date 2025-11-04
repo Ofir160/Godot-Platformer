@@ -25,7 +25,7 @@ func is_on_floor(near : bool) -> bool:
 		return far_down.is_colliding()
 		
 ## Returns true if the character is touching the cieling or false if not. Pass in true to use near raycasts, false for far raycasts.
-func is_on_cieling(near : bool) -> bool:
+func is_on_ceiling(near : bool) -> bool:
 	if near:
 		return near_up.is_colliding()
 	else:

@@ -57,7 +57,7 @@ func process_input() -> State:
 
 func physics_update(delta : float) -> State:
 	# If you walked off a platform
-	if not parent.body.is_on_floor():
+	if not parent.collision.is_on_floor(true):
 		return coyote_state
 	
 	var target_speed : float = move_input * stats.move_speed
@@ -79,8 +79,8 @@ func physics_update(delta : float) -> State:
 		return idle_state
 	
 	# If walking into a wall change state to idle state
-	if parent.body.is_on_wall():
-		var dir : float = -sign(parent.body.get_wall_normal().x)
+	if parent.collision.is_on_wall(true):
+		var dir : float = -sign(parent.collision.get_wall_side())
 		if (sign(move_input) == dir and abs(move_input) > 0.01) or abs(move_input) < 0.01:
 			return idle_state
 	
@@ -91,7 +91,7 @@ func is_jump_buffered() -> bool:
 	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
 	
 func is_jump_available() -> bool:
-	return parent.timer_manager.query_timer("Jump cooldown") and parent.body.is_on_floor()
+	return parent.timer_manager.query_timer("Jump cooldown") and parent.collision.is_on_floor(false)
 	
 func is_speeding(input : float) -> bool:
 	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01

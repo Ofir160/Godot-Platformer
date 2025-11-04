@@ -222,13 +222,14 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body", "sprite", "attack", "state_machine", "timer_manager")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body", "sprite", "attack", "collision", "state_machine", "timer_manager")]
 collision_layer = 2
 safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
 sprite = NodePath("AnimatedSprite2D")
 attack = NodePath("Attack Manager")
+collision = NodePath("Raycast Manager")
 state_machine = NodePath("State Machine")
 timer_manager = NodePath("Timer Manager")
 print_state_changes = true
@@ -465,8 +466,16 @@ sprite_frames = SubResource("SpriteFrames_wpjfl")
 animation = &"Hide"
 autoplay = "Hide"
 
-[node name="Raycast Manager" type="Node2D" parent="."]
+[node name="Raycast Manager" type="Node2D" parent="." node_paths=PackedStringArray("near_right", "near_left", "near_up", "near_down", "far_right", "far_left", "far_up", "far_down")]
 script = ExtResource("26_0gysh")
+near_right = NodePath("Near Right")
+near_left = NodePath("Near Left")
+near_up = NodePath("Near Up")
+near_down = NodePath("Near Down")
+far_right = NodePath("Far Right")
+far_left = NodePath("Far Left")
+far_up = NodePath("Far Up")
+far_down = NodePath("Far Down")
 
 [node name="Near Right" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
@@ -486,16 +495,15 @@ target_position = Vector2(0, 32.8)
 
 [node name="Far Right" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(24, 0)
+target_position = Vector2(50, 0)
 
 [node name="Far Left" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(-24, 0)
+target_position = Vector2(-50, 0)
 
 [node name="Far Up" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(0, -36)
+target_position = Vector2(0, -50)
 
 [node name="Far Down" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(0, 36)

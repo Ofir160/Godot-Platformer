@@ -23,7 +23,7 @@ func enter() -> void:
 	PlayerState.double_jump_available = true
 	
 	# Save the direction of the wall
-	dir = -sign(parent.body.get_wall_normal().x)
+	dir = -sign(parent.collision.get_wall_side())
 	
 func process_input() -> State:
 	# Gets the player's movement direction
@@ -58,14 +58,14 @@ func physics_update(delta : float) -> State:
 	parent.body.velocity.x = dir
 	
 	# Checks if the player slides to the ground
-	if parent.body.is_on_floor():
+	if parent.collision.is_on_floor(true):
 		# If moving off the wall go to move state
 		if abs(move_input) > 0.01 and sign(move_input) != dir:
 			return move_state
 		else:
 			return idle_state
 	# If the wall disappears go to air state
-	if not parent.body.is_on_wall() and not parent.body.is_on_floor():
+	if not parent.collision.is_on_wall(false) and not parent.collision.is_on_floor(true):
 		return air_state
 	
 	# Decelerates by the difference in slide speed. Greater when the difference is bigger 
@@ -87,7 +87,7 @@ func is_jump_buffered() -> bool:
 	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
 	
 func is_wall_jump_available() -> bool:
-	return parent.timer_manager.query_timer("Wall jump cooldown") and parent.body.is_on_wall()
+	return parent.timer_manager.query_timer("Wall jump cooldown") and parent.collision.is_on_wall(false)
 	
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")

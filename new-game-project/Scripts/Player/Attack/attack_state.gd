@@ -30,9 +30,9 @@ func physics_update(delta : float) -> State:
 		parent.body.velocity = PlayerState.saved_attack_speed * stats.attack_velocity_end_damping
 		
 		# End attack
-		if parent.body.is_on_wall():
+		if parent.collision.is_on_wall(true):
 			return slide_state
-		elif parent.body.is_on_floor():
+		elif parent.collision.is_on_floor(true):
 			return move_state
 		else:
 			return air_state

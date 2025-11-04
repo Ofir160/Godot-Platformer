@@ -62,15 +62,15 @@ func process_input() -> State:
 
 func physics_update(delta : float) -> State:
 	# If on the floor
-	if parent.body.is_on_floor():
+	if parent.collision.is_on_floor(true):
 		# If moving when reached the floor go to move state
 		if abs(parent.body.velocity.x) > 0.01:
 			return move_state
 		else:
 			return idle_state
 	# If on the wall and not going up too much
-	elif parent.body.is_on_wall() and parent.body.velocity.y > -stats.wall_jump_up_velocity_threshold:
-		var dir : float = -sign(parent.body.get_wall_normal().x)
+	elif parent.collision.is_on_wall(true) and parent.body.velocity.y > -stats.wall_jump_up_velocity_threshold:
+		var dir : float = -sign(parent.collision.get_wall_side())
 		
 		# If not moving away from the wall
 		if (abs(move_input) > 0.01 and sign(move_input) == dir) or abs(move_input) < 0.01:
