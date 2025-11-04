@@ -284,7 +284,7 @@ script = ExtResource("17_qqcod")
 air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
 
-[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_start_state", "double_jump_state", "super_double_jump_state", "dash_interruptable_state", "attack_start_state")]
+[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_start_state", "double_jump_state", "super_double_jump_state", "super_dash_state", "super_dash_wall_state", "dash_interruptable_state", "attack_start_state")]
 script = ExtResource("7_3smsa")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
@@ -293,6 +293,8 @@ slide_state = NodePath("../Slide State")
 dash_start_state = NodePath("../Dash Start State")
 double_jump_state = NodePath("../Double Jump State")
 super_double_jump_state = NodePath("../Super Double Jump State")
+super_dash_state = NodePath("../Super Dash State")
+super_dash_wall_state = NodePath("../Super Dash Wall State")
 dash_interruptable_state = NodePath("../Dash Interruptable State")
 attack_start_state = NodePath("../Attack Start State")
 animation_name = "Move"
@@ -495,11 +497,11 @@ target_position = Vector2(0, 32.8)
 
 [node name="Far Right" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(50, 0)
+target_position = Vector2(45, 0)
 
 [node name="Far Left" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(-50, 0)
+target_position = Vector2(-39, 0)
 
 [node name="Far Up" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
@@ -507,3 +509,4 @@ target_position = Vector2(0, -50)
 
 [node name="Far Down" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
+target_position = Vector2(0, 60)
