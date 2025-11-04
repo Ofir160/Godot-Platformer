@@ -13,6 +13,9 @@ func enter() -> void:
 	# Sets the dash start timer
 	parent.timer_manager.set_timer("Attack", stats.interruptable_attack_time)
 	
+	# Sets the attack visuals
+	parent.attack.attack(PlayerState.attack_direction)
+	
 func process_input() -> State:
 	
 	return null
@@ -21,6 +24,8 @@ func physics_update(delta : float) -> State:
 	parent.body.move_and_slide()
 	
 	if parent.timer_manager.query_timer("Attack"):
+		parent.attack.retract()
+		
 		# End attack
 		if parent.body.is_on_wall():
 			return slide_state

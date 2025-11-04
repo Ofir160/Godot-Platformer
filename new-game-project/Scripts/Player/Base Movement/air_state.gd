@@ -27,15 +27,15 @@ func process_input() -> State:
 	elif move_input < 0:
 		parent.sprite.flip_h = true
 		
+	# If the player tried to attack
+	if Input.is_action_just_pressed("attack"):
+		return attack_start_state
+		
 	# If the player tried to dash
 	if is_dash_buffered() and dash_available():
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
-	
-	# If the player tried to attack
-	if Input.is_action_just_pressed("attack"):
-		return attack_start_state
 	
 	# Checks if a super dash is queued and it should be used as a super double jump
 	if PlayerState.superdash_queued and PlayerState.double_jump_available and parent.timer_manager.query_timer("Super double jump delay") and previous_state == dash_interruptable_state:

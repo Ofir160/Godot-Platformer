@@ -41,7 +41,7 @@ func process_input() -> State:
 		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
 	
 	# If dash is cancelled
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_just_pressed("attack") or PlayerState.dash_attack_queued:
 		parent.timer_manager.kill_timer("Dash")
 		parent.timer_manager.kill_timer("Regain dash")
 		parent.timer_manager.kill_timer("Super double jump delay")

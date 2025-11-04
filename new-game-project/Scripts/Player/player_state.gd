@@ -13,6 +13,7 @@ static var superdash_queued : bool
 
 static var attack_direction : Vector2
 static var saved_attack_speed : Vector2
+static var dash_attack_queued : bool
 
 func enter() -> void:
 	super()

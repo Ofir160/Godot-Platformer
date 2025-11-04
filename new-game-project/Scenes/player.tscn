@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=52 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
@@ -22,6 +22,9 @@
 [ext_resource type="Script" uid="uid://b8hnx4oovl3ah" path="res://Scripts/Timer Manager/timer_manager.gd" id="20_l6n3p"]
 [ext_resource type="Script" uid="uid://g01x8dsfsy7u" path="res://Scripts/Player/Attack/attack_start_state.gd" id="20_wpjfl"]
 [ext_resource type="Script" uid="uid://xnb8bm8xurhv" path="res://Scripts/Player/Attack/attack_state.gd" id="21_bi64h"]
+[ext_resource type="Texture2D" uid="uid://c8tyfagwpj30t" path="res://Eat Mask.png" id="23_2ijsl"]
+[ext_resource type="Script" uid="uid://d1ye5h2c056t8" path="res://Scripts/Attack Manager/attack_manager.gd" id="23_p1odr"]
+[ext_resource type="Texture2D" uid="uid://b03l8bx4kg1no" path="res://icon.svg" id="24_p1odr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
 size = Vector2(40, 64)
@@ -191,12 +194,40 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body", "sprite", "state_machine", "timer_manager")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_vfarp"]
+atlas = ExtResource("24_p1odr")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0gysh"]
+atlas = ExtResource("23_2ijsl")
+region = Rect2(0, 0, 916, 945)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wpjfl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vfarp")
+}],
+"loop": true,
+"name": &"Attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0gysh")
+}],
+"loop": true,
+"name": &"Hide",
+"speed": 5.0
+}]
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("body", "sprite", "attack", "state_machine", "timer_manager")]
 collision_layer = 2
 safe_margin = 0.1
 script = ExtResource("1_cvnsp")
 body = NodePath(".")
 sprite = NodePath("AnimatedSprite2D")
+attack = NodePath("Attack Manager")
 state_machine = NodePath("State Machine")
 timer_manager = NodePath("Timer Manager")
 print_state_changes = true
@@ -353,3 +384,82 @@ stats = ExtResource("5_f1ek2")
 
 [node name="Timer Manager" type="Node" parent="."]
 script = ExtResource("20_l6n3p")
+
+[node name="Attack Manager" type="Node2D" parent="." node_paths=PackedStringArray("normal_right", "normal_left", "normal_up", "normal_down", "normal_down_right", "normal_down_left", "normal_up_right", "normal_up_left")]
+script = ExtResource("23_p1odr")
+normal_right = NodePath("Normal Right")
+normal_left = NodePath("Normal Left")
+normal_up = NodePath("Normal Up")
+normal_down = NodePath("Normal Down")
+normal_down_right = NodePath("Normal Down-Right")
+normal_down_left = NodePath("Normal Down-Left")
+normal_up_right = NodePath("Normal Up-Right")
+normal_up_left = NodePath("Normal Up-Left")
+
+[node name="Normal Right" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(65, -34)
+scale = Vector2(0.703125, 0.296875)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"
+
+[node name="Normal Left" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-65, -34)
+scale = Vector2(0.703125, 0.296875)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"
+
+[node name="Normal Up" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-5.96046e-08, -100)
+scale = Vector2(0.328125, 0.560547)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Attack"
+autoplay = "Hide"
+
+[node name="Normal Down" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-2.11758e-22, 36)
+scale = Vector2(0.328125, 0.560547)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"
+
+[node name="Normal Down-Right" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(45, 16)
+rotation = 0.785398
+scale = Vector2(0.677246, 0.324871)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"
+
+[node name="Normal Down-Left" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-46, 16)
+rotation = -0.785398
+scale = Vector2(0.677246, 0.324871)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"
+
+[node name="Normal Up-Right" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(46, -76)
+rotation = -0.785398
+scale = Vector2(0.677246, 0.324871)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"
+
+[node name="Normal Up-Left" type="AnimatedSprite2D" parent="Attack Manager"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-46, -76)
+rotation = 0.785398
+scale = Vector2(0.677246, 0.324871)
+sprite_frames = SubResource("SpriteFrames_wpjfl")
+animation = &"Hide"
+autoplay = "Hide"

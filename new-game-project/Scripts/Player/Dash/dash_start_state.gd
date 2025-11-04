@@ -25,6 +25,9 @@ func enter() -> void:
 	# Resets super dash queue
 	PlayerState.superdash_queued = false
 	
+	# Resets dash attack queue
+	PlayerState.dash_attack_queued = false
+	
 func process_input() -> State:
 	
 	var new_direction : Vector2 = Vector2(Input.get_axis("move_left", "move_right"), Input.get_axis("look_up", "look_down")).normalized()
@@ -41,7 +44,8 @@ func process_input() -> State:
 		# Sets the dash direction to the desired direction
 		PlayerState.dash_direction = direction
 		
-		
+	if Input.is_action_just_pressed("attack"):
+		PlayerState.dash_attack_queued = true
 		
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
