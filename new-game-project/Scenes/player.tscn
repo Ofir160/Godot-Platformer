@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=53 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
@@ -25,6 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://c8tyfagwpj30t" path="res://Eat Mask.png" id="23_2ijsl"]
 [ext_resource type="Script" uid="uid://d1ye5h2c056t8" path="res://Scripts/Attack Manager/attack_manager.gd" id="23_p1odr"]
 [ext_resource type="Texture2D" uid="uid://b03l8bx4kg1no" path="res://icon.svg" id="24_p1odr"]
+[ext_resource type="Script" uid="uid://cpt228xah086r" path="res://Scripts/Collision Manager/raycast_manager.gd" id="26_0gysh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
 size = Vector2(40, 64)
@@ -417,7 +418,7 @@ modulate = Color(0, 0, 0, 1)
 position = Vector2(-5.96046e-08, -100)
 scale = Vector2(0.328125, 0.560547)
 sprite_frames = SubResource("SpriteFrames_wpjfl")
-animation = &"Attack"
+animation = &"Hide"
 autoplay = "Hide"
 
 [node name="Normal Down" type="AnimatedSprite2D" parent="Attack Manager"]
@@ -463,3 +464,38 @@ scale = Vector2(0.677246, 0.324871)
 sprite_frames = SubResource("SpriteFrames_wpjfl")
 animation = &"Hide"
 autoplay = "Hide"
+
+[node name="Raycast Manager" type="Node2D" parent="."]
+script = ExtResource("26_0gysh")
+
+[node name="Near Right" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(20.8, 0)
+
+[node name="Near Left" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(-20.8, 0)
+
+[node name="Near Up" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(0, -32.9)
+
+[node name="Near Down" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(0, 32.8)
+
+[node name="Far Right" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(24, 0)
+
+[node name="Far Left" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(-24, 0)
+
+[node name="Far Up" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(0, -36)
+
+[node name="Far Down" type="RayCast2D" parent="Raycast Manager"]
+position = Vector2(0, -32)
+target_position = Vector2(0, 36)
