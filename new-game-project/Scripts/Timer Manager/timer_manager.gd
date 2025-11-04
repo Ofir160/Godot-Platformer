@@ -34,3 +34,8 @@ func check_timer(name : String) -> float:
 		return timers.get(name.to_upper())
 	else:
 		return 0
+		
+## Kills a timer. Does nothing if the timer doesn't exist
+func kill_timer(name : String) -> void:
+	if timers.has(name.to_upper()):
+		timers.erase(name.to_upper())

@@ -41,6 +41,8 @@ func process_input() -> State:
 		# Sets the dash direction to the desired direction
 		PlayerState.dash_direction = direction
 		
+		
+		
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
 		
