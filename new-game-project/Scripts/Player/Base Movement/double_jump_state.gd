@@ -19,7 +19,8 @@ func enter() -> void:
 	
 	# Adds the double jump jump force
 	parent.body.velocity.y -= stats.double_jump_force
-		
+	
+	# Check if speeding because I want double jumps when moving fast to give you a boost
 	if not is_speeding(move_input):
 		# Dampens horizontal momentum
 		parent.body.velocity.x *= stats.double_jump_horizontal_damping
@@ -38,4 +39,6 @@ func physics_update(delta : float) -> State:
 	return air_state
 	
 func is_speeding(input : float) -> bool:
-	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
+	return (abs(parent.body.velocity.x) > stats.max_speed
+	 and sign(parent.body.velocity.x) == sign(input)
+	 and abs(input) > 0.01)

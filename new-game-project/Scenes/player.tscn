@@ -497,11 +497,11 @@ target_position = Vector2(0, 32.8)
 
 [node name="Far Right" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(45, 0)
+target_position = Vector2(37.5, 0)
 
 [node name="Far Left" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(-39, 0)
+target_position = Vector2(-37.5, 0)
 
 [node name="Far Up" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
@@ -509,4 +509,3 @@ target_position = Vector2(0, -50)
 
 [node name="Far Down" type="RayCast2D" parent="Raycast Manager"]
 position = Vector2(0, -32)
-target_position = Vector2(0, 60)

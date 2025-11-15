@@ -20,14 +20,6 @@ func enter() -> void:
 	if PlayerState.dashes_available < stats.dashes:
 		PlayerState.dashes_available = stats.dashes
 	
-	# Checks if on a wall (more reliable than checking every frame)
-	if previous_state == slide_state:
-		on_wall = true
-	else:
-		on_wall = parent.collision.is_on_wall(true)
-	if on_wall:
-		dir = -sign(parent.collision.get_wall_side())
-	
 	# Refill double jump
 	PlayerState.double_jump_available = true
 	
@@ -54,6 +46,7 @@ func process_input() -> State:
 	
 	# Check if a jump is buffered
 	if is_jump_buffered() and is_jump_available():
+		# If jumping in the time after a dash do a superdash instead
 		if not parent.timer_manager.query_timer("Late superdash"):
 			return super_dash_state
 		else:
@@ -68,8 +61,8 @@ func physics_update(delta : float) -> State:
 	
 	# Check if moving
 	if abs(move_input) > 0.01:
-		if on_wall:
-			if sign(move_input) != dir:
+		if parent.collision.is_on_wall(false):
+			if sign(move_input) != -parent.collision.get_wall_side():
 				return move_state
 		else:
 			return move_state
@@ -78,16 +71,20 @@ func physics_update(delta : float) -> State:
 	return null
 	
 func is_jump_buffered() -> bool:
-	return Input.is_action_just_pressed("jump") or not parent.timer_manager.query_timer("Jump buffer")
+	return (Input.is_action_just_pressed("jump") 
+	 or not parent.timer_manager.query_timer("Jump buffer"))
 
 func is_jump_available() -> bool:
-	return parent.timer_manager.query_timer("Jump cooldown") and parent.collision.is_on_floor(false)
+	return (parent.timer_manager.query_timer("Jump cooldown") 
+	and parent.collision.is_on_floor(false))
 
 func dash_available() -> bool:
-	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
+	return (PlayerState.dashes_available > 0
+	 and parent.timer_manager.query_timer("Dash cooldown"))
 
 func is_dash_buffered() -> bool:
-	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")
+	return (Input.is_action_just_pressed("dash")
+	 or not parent.timer_manager.query_timer("Dash buffer"))
 	
 func is_dash_direction_valid() -> bool:
 	var looking_up : bool = Input.is_action_pressed("look_up")
@@ -95,8 +92,15 @@ func is_dash_direction_valid() -> bool:
 	
 	# Stops the dash if dashing down into the floor
 	var dashing_down : bool = looking_down and abs(move_input) < 0.01
-	# Stops the dash if dashing straight into a wall
-	var dashing_into_wall : bool = abs(move_input) > 0.01 and sign(move_input) == dir and not looking_up and on_wall
+	
+	# Stops the dash if dashing straight into a wall by checking if
+	var dashing_into_wall : bool = (abs(move_input) > 0.01 
+	 and sign(move_input) == -parent.collision.get_wall_side() 
+	 and not looking_up and parent.collision.is_on_wall(false))
+	
 	# Stops the dash if dashing straight into a wall but idle
-	var idle_dashing_into_wall : bool = abs(move_input) < 0.01 and (-1 if parent.sprite.flip_h else 1) == dir and not looking_down and not looking_up and on_wall
+	var idle_dashing_into_wall : bool = (abs(move_input) < 0.01 
+	 and (-1 if parent.sprite.flip_h else 1) == -parent.collision.get_wall_side() 
+	 and not looking_down and not looking_up and parent.collision.is_on_wall(false))
+	
 	return not dashing_down and not dashing_into_wall and not idle_dashing_into_wall

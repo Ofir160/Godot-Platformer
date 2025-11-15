@@ -36,6 +36,7 @@ func process_input() -> State:
 	# If the player tried to dash
 	if is_dash_buffered() and dash_available():
 		return dash_start_state
+	# If the player has dashed but cannot, buffer it
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	
@@ -56,6 +57,7 @@ func process_input() -> State:
 	if Input.is_action_just_pressed("jump"):
 		# If you can double jump
 		if PlayerState.double_jump_available:
+			# If jumping in the time after a dash queue up a super double jump instead
 			if not parent.timer_manager.query_timer("Late superdash"):
 				parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
 				PlayerState.superdash_queued = true
