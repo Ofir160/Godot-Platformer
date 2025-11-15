@@ -56,15 +56,17 @@ func physics_update(delta : float) -> State:
 		if parent.timer_manager.query_timer("Regain dash"):
 			# Refils dash if grounded after the regain dash time
 			PlayerState.dashes_available = stats.dashes
-		elif PlayerState.superdash_queued:
+		# If a superdash is queued and the player is near the ground
+		if PlayerState.superdash_queued:
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
+			# Must be moving downward in order to trigger a super dash
 			if PlayerState.dash_direction.y >= 0:
 				return super_dash_state
 		
 	# If on the ground and not moving
-	if abs(parent.body.velocity.x) < 0.01 and parent.body.velocity.y >= 0 and parent.collision.is_on_floor(true):
+	if stopped_on_floor():
 		# Sets the dash cooldown timer
 		parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
@@ -78,14 +80,15 @@ func physics_update(delta : float) -> State:
 		if parent.timer_manager.query_timer("Regain dash"):
 			# Refils dash if walled after the regain dash time
 			PlayerState.dashes_available = stats.dashes
-		elif PlayerState.superdash_queued:
+		# If a superdash is queued and the player is near the wall
+		if PlayerState.superdash_queued:
 			# Sets the dash cooldown timer
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			return super_dash_wall_state
 	
 	# If on the wall and not moving
-	if abs(parent.body.velocity.y) < 0.01 and parent.collision.is_on_wall(true):
+	if stopped_on_wall():
 		# Sets the dash cooldown timer
 		parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 		
@@ -128,14 +131,11 @@ func physics_update(delta : float) -> State:
 		if parent.collision.is_on_floor(true):
 			return move_state
 		else:
-			if PlayerState.dash_direction.y < 0.01:
-				# If ended dash moving upwards decrease speed
+			# If dash direction was upwards decrease speed
+			if PlayerState.dash_direction.y < -0.01:
 				parent.body.velocity *= stats.dash_upwards_mult
-			elif PlayerState.dash_direction.y > 0.01 and abs(PlayerState.dash_direction.x) > 0.01:
-				# If ended dash moving downwards increase speed
-				parent.body.velocity.x *= stats.dash_downwards_mult
+			# If dash direction was horizontal
 			elif abs(PlayerState.dash_direction.y) < 0.01:
-				# If ended dash moving horizontally decrease speed
 				parent.body.velocity.x *= stats.dash_horizontal_mult
 			if parent.collision.is_on_wall(false):
 				return slide_state
@@ -144,3 +144,12 @@ func physics_update(delta : float) -> State:
 	
 	parent.body.move_and_slide()
 	return null
+	
+func stopped_on_floor() -> bool:
+	return (abs(parent.body.velocity.x) < 0.01 
+	 and parent.body.velocity.y >= 0 
+	 and parent.collision.is_on_floor(true))
+	
+func stopped_on_wall() -> bool:
+	return (abs(parent.body.velocity.y) < 0.01
+	 and parent.collision.is_on_wall(true))

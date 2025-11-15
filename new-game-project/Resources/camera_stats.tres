@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_37pcq")
-x_damping_strength = 2.0
-y_damping_strength_up = 5.3
+x_damping_strength = 1.5
+y_damping_strength_up = 2.0
 y_damping_strength_down = 20.0
 y_damping_change_time = 2.0
 y_damping_change_velocity_threshold = 725.0

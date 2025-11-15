@@ -57,7 +57,6 @@ extends Resource
 @export var dash_vertical_damping : float = 0.5
 @export var dash_horizontal_damping : float = 0.7
 @export var dash_upwards_mult : float = 0.55
-@export var dash_downwards_mult : float = 1.3
 @export var dash_horizontal_mult : float = 0.6
 
 var frozen_dash_time : float:
