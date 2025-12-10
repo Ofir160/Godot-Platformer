@@ -9,7 +9,6 @@ class_name DashInterruptableState
 @export var wall_jump_state : PlayerState
 @export var super_dash_state : PlayerState
 @export var super_dash_wall_state : PlayerState
-@export var super_double_jump_state : PlayerState
 @export var attack_start_state : PlayerState
 
 var time_started : float
@@ -104,20 +103,6 @@ func physics_update(delta : float) -> State:
 			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
 			
 			return air_state
-	
-	# If super double jumping
-	if PlayerState.superdash_queued and parent.timer_manager.query_timer("Super double jump delay"):
-		if not parent.collision.is_on_floor(false) and not parent.collision.is_on_wall(false):
-			
-			if parent.timer_manager.query_timer("Regain dash"):
-				# Refils dash if walled after the regain dash time
-				PlayerState.dashes_available = stats.dashes
-			
-			# Sets the dash cooldown timer
-			parent.timer_manager.set_timer("Dash cooldown", stats.dash_cooldown)
-			
-			if PlayerState.double_jump_available:
-				return super_double_jump_state
 	
 	# Check if the dash has ended
 	if parent.timer_manager.query_timer("Dash"):

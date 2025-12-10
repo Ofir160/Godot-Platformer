@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://cp22j7o8sly6y"]
+[gd_scene load_steps=52 format=3 uid="uid://cp22j7o8sly6y"]
 
 [ext_resource type="Script" uid="uid://bvk6ini3cm1j2" path="res://Scripts/Player/player.gd" id="1_cvnsp"]
 [ext_resource type="Texture2D" uid="uid://swekuspp4ktk" path="res://Assets/brackeys_platformer_assets/sprites/knight.png" id="2_cvnsp"]
@@ -17,7 +17,6 @@
 [ext_resource type="Script" uid="uid://cplwl2nyn0vqj" path="res://Scripts/Player/Dash/dash_start_state.gd" id="15_h4iuc"]
 [ext_resource type="Script" uid="uid://beww8nna4vm1o" path="res://Scripts/Player/Superdash/super_dash_state.gd" id="16_fd4e3"]
 [ext_resource type="Script" uid="uid://b7mnmufcy5ww1" path="res://Scripts/Player/Base Movement/double_jump_state.gd" id="17_qqcod"]
-[ext_resource type="Script" uid="uid://c0dldphyotaa1" path="res://Scripts/Player/Superdash/super_double_jump_state.gd" id="18_igrcy"]
 [ext_resource type="Script" uid="uid://c3pwrogdugptq" path="res://Scripts/Player/Superdash/super_dash_wall_state.gd" id="19_fs7ks"]
 [ext_resource type="Script" uid="uid://b8hnx4oovl3ah" path="res://Scripts/Timer Manager/timer_manager.gd" id="20_l6n3p"]
 [ext_resource type="Script" uid="uid://g01x8dsfsy7u" path="res://Scripts/Player/Attack/attack_start_state.gd" id="20_wpjfl"]
@@ -284,7 +283,7 @@ script = ExtResource("17_qqcod")
 air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
 
-[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_start_state", "double_jump_state", "super_double_jump_state", "super_dash_state", "super_dash_wall_state", "dash_interruptable_state", "attack_start_state")]
+[node name="Air State" type="Node" parent="State Machine" node_paths=PackedStringArray("move_state", "idle_state", "jump_state", "slide_state", "dash_start_state", "double_jump_state", "super_dash_state", "super_dash_wall_state", "dash_interruptable_state", "attack_start_state")]
 script = ExtResource("7_3smsa")
 move_state = NodePath("../Move State")
 idle_state = NodePath("../Idle State")
@@ -292,7 +291,6 @@ jump_state = NodePath("../Jump State")
 slide_state = NodePath("../Slide State")
 dash_start_state = NodePath("../Dash Start State")
 double_jump_state = NodePath("../Double Jump State")
-super_double_jump_state = NodePath("../Super Double Jump State")
 super_dash_state = NodePath("../Super Dash State")
 super_dash_wall_state = NodePath("../Super Dash Wall State")
 dash_interruptable_state = NodePath("../Dash Interruptable State")
@@ -339,7 +337,7 @@ dash_interruptable_state = NodePath("../Dash Interruptable State")
 animation_name = "Jump"
 stats = ExtResource("5_f1ek2")
 
-[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state", "super_dash_state", "super_dash_wall_state", "super_double_jump_state", "attack_start_state")]
+[node name="Dash Interruptable State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state", "move_state", "idle_state", "slide_state", "jump_state", "wall_jump_state", "super_dash_state", "super_dash_wall_state", "attack_start_state")]
 script = ExtResource("14_7dp3o")
 air_state = NodePath("../Air State")
 move_state = NodePath("../Move State")
@@ -349,7 +347,6 @@ jump_state = NodePath("../Jump State")
 wall_jump_state = NodePath("../Wall Jump State")
 super_dash_state = NodePath("../Super Dash State")
 super_dash_wall_state = NodePath("../Super Dash Wall State")
-super_double_jump_state = NodePath("../Super Double Jump State")
 attack_start_state = NodePath("../Attack Start State")
 animation_name = "Jump"
 stats = ExtResource("5_f1ek2")
@@ -361,11 +358,6 @@ stats = ExtResource("5_f1ek2")
 
 [node name="Super Dash State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
 script = ExtResource("16_fd4e3")
-air_state = NodePath("../Air State")
-stats = ExtResource("5_f1ek2")
-
-[node name="Super Double Jump State" type="Node" parent="State Machine" node_paths=PackedStringArray("air_state")]
-script = ExtResource("18_igrcy")
 air_state = NodePath("../Air State")
 stats = ExtResource("5_f1ek2")
 

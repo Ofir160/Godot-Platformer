@@ -7,7 +7,6 @@ class_name AirState
 @export var slide_state : PlayerState
 @export var dash_start_state : PlayerState
 @export var double_jump_state : PlayerState
-@export var super_double_jump_state : PlayerState
 @export var super_dash_state : PlayerState
 @export var super_dash_wall_state : PlayerState
 @export var dash_interruptable_state : PlayerState
@@ -49,20 +48,17 @@ func process_input() -> State:
 		elif parent.collision.is_on_wall(false) and not parent.timer_manager.query_timer("Late superdash"):
 			return super_dash_wall_state
 		# Checks if late super dash should be used as a super double jump
-		elif PlayerState.double_jump_available and parent.timer_manager.query_timer("Super double jump delay"):
+		elif PlayerState.double_jump_available:
 			PlayerState.dashes_available = stats.dashes
-			return super_double_jump_state
+			return double_jump_state
 		
 	# Checks if the player tried to double jump
 	if Input.is_action_just_pressed("jump"):
 		# If you can double jump
 		if PlayerState.double_jump_available:
-			# If jumping in the time after a dash queue up a super double jump instead
 			if not parent.timer_manager.query_timer("Late superdash"):
-				parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
-				PlayerState.superdash_queued = true
-			else:
-				return double_jump_state
+				PlayerState.dashes_available = stats.dashes
+			return double_jump_state
 		else:
 			parent.timer_manager.set_timer("Jump buffer", stats.jump_buffer_time)
 	
