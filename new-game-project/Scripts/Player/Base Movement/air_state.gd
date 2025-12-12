@@ -47,8 +47,8 @@ func process_input() -> State:
 		# Checks if close enough to the wall
 		elif parent.collision.is_on_wall(false) and not parent.timer_manager.query_timer("Late superdash"):
 			return super_dash_wall_state
-		# Checks if late super dash should be used as a super double jump
 		elif PlayerState.double_jump_available:
+			# Double jumps after dashes will reset available dashes
 			PlayerState.dashes_available = stats.dashes
 			return double_jump_state
 		
@@ -57,6 +57,7 @@ func process_input() -> State:
 		# If you can double jump
 		if PlayerState.double_jump_available:
 			if not parent.timer_manager.query_timer("Late superdash"):
+				# Double jumps after dashes will reset available dashes
 				PlayerState.dashes_available = stats.dashes
 			return double_jump_state
 		else:
