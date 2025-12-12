@@ -29,8 +29,10 @@ func process_input() -> State:
 		parent.sprite.flip_h = true
 		
 	# If the player tried to attack
-	if Input.is_action_just_pressed("attack") and attack_available():
+	if is_attack_buffered() and attack_available():
 		return attack_start_state
+	elif Input.is_action_just_pressed("attack"):
+		parent.timer_manager.set_timer("Attack buffer", stats.attack_buffer_time)
 		
 	# If the player tried to dash
 	if is_dash_buffered() and dash_available():
@@ -78,7 +80,7 @@ func physics_update(delta : float) -> State:
 		else:
 			return idle_state
 	# If on the wall and not going up too much
-	elif parent.collision.is_on_wall(true) and parent.body.velocity.y > -stats.wall_jump_up_velocity_threshold:
+	elif is_sliding():
 		var dir : float = -sign(parent.collision.get_wall_side())
 		
 		# If not moving away from the wall
@@ -129,19 +131,31 @@ func physics_update(delta : float) -> State:
 	return null
 	
 func is_at_apex() -> bool:
-	return previous_state == jump_state and abs(parent.body.velocity.y) < stats.jump_hang_time_threshold
+	return (previous_state == jump_state 
+	and abs(parent.body.velocity.y) < stats.jump_hang_time_threshold)
 	
 func is_speeding(input : float) -> bool:
-	return abs(parent.body.velocity.x) > stats.max_speed and sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01
+	return (abs(parent.body.velocity.x) > stats.max_speed and 
+	sign(parent.body.velocity.x) == sign(input) and abs(input) > 0.01)
 
 func dash_available() -> bool:
-	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
+	return (PlayerState.dashes_available > 0 
+	and parent.timer_manager.query_timer("Dash cooldown"))
 	
 func attack_available() -> bool:
 	return parent.timer_manager.query_timer("Attack cooldown")
 
 func is_dash_buffered() -> bool:
-	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")
+	return (Input.is_action_just_pressed("dash") 
+	or not parent.timer_manager.query_timer("Dash buffer"))
+	
+func is_attack_buffered() -> bool:
+	return (Input.is_action_just_pressed("attack")
+	 or not parent.timer_manager.query_timer("Attack buffer"))
 
 func is_jump_available() -> bool:
 	return parent.timer_manager.query_timer("Jump cooldown")
+	
+func is_sliding() -> bool:
+	return (parent.collision.is_on_wall(true)
+	 and parent.body.velocity.y > -stats.wall_jump_up_velocity_threshold)

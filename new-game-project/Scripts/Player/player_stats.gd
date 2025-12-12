@@ -102,6 +102,7 @@ var regain_dash_time : float:
 @export var attack_velocity_damping : float = 0.1
 @export var attack_velocity_end_damping : float = 0.5
 @export var attack_cooldown : float = 0.4
+@export var attack_buffer_time : float = 0.1
 
 var frozen_attack_time : float:
 	get:

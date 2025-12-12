@@ -33,6 +33,8 @@ func process_input() -> State:
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
 	if Input.is_action_just_pressed("jump"):
 		parent.timer_manager.set_timer("Wall jump buffer", stats.wall_jump_buffer_time)
+	if Input.is_action_just_pressed("attack"):
+		parent.timer_manager.set_timer("Attack buffer", stats.attack_buffer_time)
 	
 	return null
 

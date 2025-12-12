@@ -16,6 +16,9 @@ func enter() -> void:
 	# Sets the attack visuals
 	parent.attack.attack(PlayerState.attack_direction)
 	
+	if Input.is_action_just_pressed("attack"):
+		print("Hi")
+	
 func process_input() -> State:
 	
 	return null

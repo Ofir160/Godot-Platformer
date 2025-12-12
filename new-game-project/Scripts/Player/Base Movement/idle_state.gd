@@ -29,15 +29,17 @@ func process_input() -> State:
 	# Get the player's movement direction
 	move_input = Input.get_axis("move_left", "move_right")
 	
+	# If the player tried to attack
+	if is_attack_buffered() and attack_available():
+		return attack_start_state
+	elif Input.is_action_just_pressed("attack"):
+		parent.timer_manager.set_timer("Attack buffer", stats.attack_buffer_time)
+	
 	# Checks if the player has dashed
 	if is_dash_buffered() and dash_available() and is_dash_direction_valid():
 		return dash_start_state
 	elif Input.is_action_just_pressed("dash"):
 		parent.timer_manager.set_timer("Dash buffer", stats.dash_buffer_time)
-	
-	# If the player tried to attack
-	if Input.is_action_just_pressed("attack") and attack_available():
-		return attack_start_state
 	
 	# Checks if a super dash is queued
 	if PlayerState.superdash_queued and not parent.timer_manager.query_timer("Late superdash"):
@@ -88,6 +90,10 @@ func attack_available() -> bool:
 func is_dash_buffered() -> bool:
 	return (Input.is_action_just_pressed("dash")
 	 or not parent.timer_manager.query_timer("Dash buffer"))
+	
+func is_attack_buffered() -> bool:
+	return (Input.is_action_just_pressed("attack")
+	 or not parent.timer_manager.query_timer("Attack buffer"))
 	
 func is_dash_direction_valid() -> bool:
 	var looking_up : bool = Input.is_action_pressed("look_up")

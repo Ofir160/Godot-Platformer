@@ -113,12 +113,7 @@ func physics_update(delta : float) -> State:
 		if parent.collision.is_on_floor(true):
 			return move_state
 		else:
-			# If dash direction was upwards decrease speed
-			if PlayerState.dash_direction.y < -0.01:
-				parent.body.velocity *= stats.dash_upwards_mult
-			# If dash direction was horizontal
-			elif abs(PlayerState.dash_direction.y) < 0.01:
-				parent.body.velocity.x *= stats.dash_horizontal_mult
+			dampen_velocity()
 			if parent.collision.is_on_wall(false):
 				return slide_state
 			else:
@@ -142,3 +137,12 @@ func attack_available() -> bool:
 func attack_queued() -> bool:
 	return (Input.is_action_just_pressed("attack")
 	 or PlayerState.dash_attack_queued)
+	
+## Dampens velocities
+func dampen_velocity() -> void:
+	# If dash direction was upwards decrease speed
+	if PlayerState.dash_direction.y < -0.01:
+		parent.body.velocity *= stats.dash_upwards_mult
+	# If dash direction was horizontal
+	elif abs(PlayerState.dash_direction.y) < 0.01:
+		parent.body.velocity.x *= stats.dash_horizontal_mult
