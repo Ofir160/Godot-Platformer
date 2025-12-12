@@ -36,14 +36,11 @@ func process_input() -> State:
 	# If jumped when not on a wall or floor
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
-		
-		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
 	
 	# If dash is cancelled
-	if Input.is_action_just_pressed("attack") or PlayerState.dash_attack_queued:
+	if attack_queued() and attack_available():
 		parent.timer_manager.kill_timer("Dash")
 		parent.timer_manager.kill_timer("Regain dash")
-		parent.timer_manager.kill_timer("Super double jump delay")
 		
 		return attack_start_state
 	
@@ -138,3 +135,10 @@ func stopped_on_floor() -> bool:
 func stopped_on_wall() -> bool:
 	return (abs(parent.body.velocity.y) < 0.01
 	 and parent.collision.is_on_wall(true))
+	
+func attack_available() -> bool:
+	return parent.timer_manager.query_timer("Attack cooldown")
+	
+func attack_queued() -> bool:
+	return (Input.is_action_just_pressed("attack")
+	 or PlayerState.dash_attack_queued)

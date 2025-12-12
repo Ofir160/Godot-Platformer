@@ -29,6 +29,8 @@ func physics_update(delta : float) -> State:
 		
 		parent.body.velocity = PlayerState.saved_attack_speed * stats.attack_velocity_end_damping
 		
+		parent.timer_manager.set_timer("Attack cooldown", stats.attack_cooldown)
+		
 		# End attack
 		if parent.collision.is_on_wall(true):
 			return slide_state

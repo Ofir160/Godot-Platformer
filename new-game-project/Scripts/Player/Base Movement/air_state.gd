@@ -29,7 +29,7 @@ func process_input() -> State:
 		parent.sprite.flip_h = true
 		
 	# If the player tried to attack
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_just_pressed("attack") and attack_available():
 		return attack_start_state
 		
 	# If the player tried to dash
@@ -136,6 +136,9 @@ func is_speeding(input : float) -> bool:
 
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
+	
+func attack_available() -> bool:
+	return parent.timer_manager.query_timer("Attack cooldown")
 
 func is_dash_buffered() -> bool:
 	return Input.is_action_just_pressed("dash") or not parent.timer_manager.query_timer("Dash buffer")

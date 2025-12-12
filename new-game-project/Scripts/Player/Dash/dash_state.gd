@@ -48,8 +48,6 @@ func process_input() -> State:
 	
 	if Input.is_action_just_pressed("jump"):
 		PlayerState.superdash_queued = true
-		
-		parent.timer_manager.set_timer("Super double jump delay", stats.super_double_jump_delay)
 	
 	return null
 	

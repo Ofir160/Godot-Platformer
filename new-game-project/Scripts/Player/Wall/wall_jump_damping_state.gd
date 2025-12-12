@@ -81,3 +81,6 @@ func is_speeding(input : float) -> bool:
 	
 func dash_available() -> bool:
 	return PlayerState.dashes_available > 0 and parent.timer_manager.query_timer("Dash cooldown")
+	
+func attack_available() -> bool:
+	return parent.timer_manager.query_timer("Attack cooldown")
