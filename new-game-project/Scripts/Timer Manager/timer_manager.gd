@@ -14,6 +14,7 @@ func update(delta : float) -> void:
 
 ## Sets the timer
 func set_timer(name : String, duration : float) -> void:
+	print("Timer: " + name + " started with a duration of " + str(duration))
 	timers.set(name.to_upper(), duration)
 	
 ## Queries if the timer is finished. Returns true if timer is finished or if it doesn't exist
