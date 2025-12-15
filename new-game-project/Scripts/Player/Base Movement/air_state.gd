@@ -100,7 +100,7 @@ func physics_update(delta : float) -> State:
 			accel_rate *= stats.jump_apex_acceleration_mult
 			target_speed *= stats.jump_apex_speed_mult
 	else:
-		accel_rate = stats.speeding_deceleration
+		accel_rate = stats.deceleration * stats.air_deceleration_mult
 	
 	# Accelerates by the difference in target speed. Greater when the difference is bigger
 	parent.body.velocity.x += (target_speed - parent.body.velocity.x) * accel_rate * delta
