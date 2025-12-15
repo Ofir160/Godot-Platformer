@@ -25,9 +25,6 @@ func enter() -> void:
 	# Saves starting velocity
 	PlayerState.saved_attack_speed = parent.body.velocity
 	
-	# Dampens current velocity
-	parent.body.velocity *= stats.attack_velocity_damping
-	
 func process_input() -> State:
 	
 	var new_direction : Vector2 = Vector2(Input.get_axis("move_left", "move_right"), Input.get_axis("look_up", "look_down")).normalized()

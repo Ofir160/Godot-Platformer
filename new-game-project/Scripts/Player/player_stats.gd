@@ -105,6 +105,10 @@ var regain_dash_time : float:
 @export var attack_buffer_time : float = 0.1
 @export var wrong_y_velocity_penalty : float = 0.7
 @export var wrong_x_velocity_penalty : float = 0.7
+@export var attack_level_2_threshold : float = 400
+@export var attack_level_3_threshold : float = 700
+@export var level_2_boost : float = 100
+@export var level_3_boost : float = 300
 
 var frozen_attack_time : float:
 	get:
