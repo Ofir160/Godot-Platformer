@@ -109,6 +109,8 @@ var regain_dash_time : float:
 @export var attack_level_3_threshold : float = 700
 @export var level_2_boost : float = 100
 @export var level_3_boost : float = 300
+@export var level_2_attack_mult : float = 1.2
+@export var level_3_attack_mult : float = 1.5
 
 var frozen_attack_time : float:
 	get:

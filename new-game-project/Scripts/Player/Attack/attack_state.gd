@@ -19,26 +19,35 @@ func enter() -> void:
 	var right_y : bool = right_y_velocity()
 	var right_x : bool = right_x_velocity()
 	
+	var level_3 : bool = level_3_attack(right_x, right_y)
+	var level_2 : bool = level_2_attack(right_x, right_y)
+	
 	if not right_y:
 		parent.body.velocity.y *= stats.wrong_y_velocity_penalty
 			
 	if not right_x:
 		parent.body.velocity.x *= stats.wrong_x_velocity_penalty
 	
-	if level_3_attack(right_x, right_y):
+	# Dampens current velocity
+	parent.body.velocity *= stats.attack_velocity_damping
+	
+	if level_3:
 		print("Super Attack!")
+		
+		parent.body.velocity += PlayerState.attack_direction * stats.level_3_boost
+		#parent.body.velocity *= stats.level_3_attack_mult
 		level = 3
-	elif level_2_attack(right_x, right_y):
+	elif level_2:
 		print("Level 2 Attack!")
+		
+		parent.body.velocity += PlayerState.attack_direction * stats.level_2_boost
+		#parent.body.velocity *= stats.level_2_attack_mult
 		level = 2
 	else:
 		print("Basic Attack.")
 		level = 1
 	# Sets the attack visuals
 	parent.attack.attack(PlayerState.attack_direction)
-	
-	# Dampens current velocity
-	parent.body.velocity *= stats.attack_velocity_damping
 	
 func process_input() -> State:
 	
@@ -64,9 +73,9 @@ func physics_update(delta : float) -> State:
 		# After the attack give bonuses if the player is moving in the right direction
 		match level:
 			3:
-				parent.body.velocity += PlayerState.attack_direction * stats.level_3_boost
+				pass#parent.body.velocity += PlayerState.attack_direction * stats.level_3_boost
 			2:
-				parent.body.velocity += PlayerState.attack_direction * stats.level_2_boost
+				pass#parent.body.velocity += PlayerState.attack_direction * stats.level_2_boost
 			1:
 				pass
 		
